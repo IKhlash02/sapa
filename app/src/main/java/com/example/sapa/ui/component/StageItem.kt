@@ -3,6 +3,7 @@ package com.example.sapa.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +22,8 @@ import com.example.sapa.ui.theme.SAPATheme
 @Composable
 fun StageItem(
     modifier: Modifier = Modifier,
-    stage: Int,
+    stage: Int? = null,
+
 ) {
     Box(
         modifier = modifier,
@@ -31,18 +33,25 @@ fun StageItem(
             modifier = Modifier
             .width(82.dp)
             .height(68.dp),
-            painter = painterResource(id = R.drawable.stage_item), contentDescription = "stageItem"
+            painter = painterResource(id = R.drawable.stage_item), contentDescription = "stageItem",
         )
-        Text(
-            text = "$stage" ,
-            style = TextStyle(
-                fontSize = 40.sp,
+        if(stage != null){
+            Text(
+                text = "$stage" ,
+                style = TextStyle(
+                    fontSize = 40.sp,
 //                fontFamily = FontFamily(Font(R.font.amaranth)),
-                fontWeight = FontWeight(700),
-                color = Color(0xFFFFFFFF),
+                    fontWeight = FontWeight(700),
+                    color = Color(0xFFFFFFFF),
 
-                )
-        )
+                    )
+            )
+        } else{
+            Image(
+                modifier = Modifier.size(60.dp),
+                painter = painterResource(id = R.drawable.peti), contentDescription = "stageItem",
+            )
+        }
     }
 }
 
@@ -50,6 +59,7 @@ fun StageItem(
 @Composable
 fun StageItemPreview() {
     SAPATheme {
-        StageItem(stage = 1)
+        StageItem()
     }
 }
+

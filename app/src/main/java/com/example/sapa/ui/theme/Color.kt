@@ -14,3 +14,4 @@ val LightBlue = Color(0xFF8ECAE6)
 val MidnightBlue = Color(0xFF023047)
 
 val PacificBlue = Color(0xFF219EBC)
+val PacificBlue2 = Color(0xFF2FA9C6)

@@ -2,7 +2,7 @@ package com.example.sapa.model
 
 data class Stage(
     val id: Int,
-    val noStage: Int,
+    val noStage: Int?,
 )
 
 data class Unit(

@@ -1,6 +1,7 @@
 package com.example.sapa.ui.screen.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,11 +34,14 @@ import com.example.sapa.ui.theme.SAPATheme
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigatToQuestion: (Int) -> Unit
 ) {
     Scaffold(
         topBar = { topBar() }
     ) { innerPadding ->
+        var stageOffsetWeight = 1f
+        var boolen = true
         LazyColumn(
             modifier.padding(innerPadding)
         ) {
@@ -46,17 +50,28 @@ fun HomeScreen(
                     noUnit = item.unitNo,
                     namaTopik = item.namaTopik
                 )
-                var stageOffsetWeight = 1f
                 item.stages.forEach { stage ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = (stageOffsetWeight * 45).dp)
+                            .padding(start = (stageOffsetWeight * 47).dp)
                     ) {
-                        StageItem(stage = stage.noStage, modifier = Modifier.padding(top = 20.dp))
+                        StageItem(
+                            stage = stage.noStage,
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .clickable { navigatToQuestion(stage.id) }
+
+                        )
                     }
-                    stageOffsetWeight += 1f
+                    if (boolen) {
+                        stageOffsetWeight += 1f
+                    } else{
+                        stageOffsetWeight -= 1f
+                    }
+
                 }
+                boolen = !boolen
                 Spacer(modifier = modifier.height(20.dp))
             }
         }
@@ -120,6 +135,6 @@ private fun topBar(
 @Composable
 private fun HomeScreenPreview() {
     SAPATheme {
-        HomeScreen()
+        HomeScreen(navigatToQuestion = {})
     }
 }

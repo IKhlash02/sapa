@@ -70,4 +70,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation (libs.androidx.core.splashscreen)
     implementation(libs.lottie.compose)
+
+    implementation (libs.androidx.camera.core)
+    implementation (libs.androidx.camera.camera2)
+    implementation (libs.androidx.camera.view)
+    implementation (libs.androidx.camera.lifecycle)
 }

@@ -9,13 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,9 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -51,7 +47,6 @@ import com.example.sapa.R
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +55,7 @@ fun QuestionScreen(
     modifier: Modifier = Modifier,
     id: Int,
     navigateBack: () -> Unit,
-    navigateFinish: () -> Unit
+    navigateFinish: (Int, Int) -> Unit
 ) {
 
     val sheetState = rememberModalBottomSheetState()
@@ -84,10 +79,10 @@ fun QuestionScreen(
                 onClick = navigateBack,
                 content = {
                     Icon(
-                        modifier = Modifier.padding(0.dp),
+                        modifier = Modifier.padding(0.dp).size(30.dp),
                         imageVector = Icons.Filled.Close,
                         contentDescription = null,
-                        tint = Color.Gray
+                        tint = Color.White
                     )
                 },
             )
@@ -106,7 +101,7 @@ fun QuestionScreen(
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
-        QuestionCard()
+        QuestionCard(modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -127,7 +122,7 @@ fun QuestionScreen(
             showBottomSheet = true
             isAnswerCorrect = false
         })
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         if (showBottomSheet) {
             ModalBottomSheet(
@@ -164,7 +159,7 @@ fun QuestionScreen(
                                 }
                             }
 
-                            navigateFinish()
+                            navigateFinish(5, 2)
                         },
                         colorButton = if (isAnswerCorrect) Color(0xFF58CC02) else Color(0xFFFF4B4C),
                         colorText = Color(0xFFFFFFFF)
@@ -172,78 +167,6 @@ fun QuestionScreen(
 
                 }
 
-            }
-        }
-    }
-}
-
-@Composable
-fun getSheetColor(isCorrect: Boolean): Color {
-    return if (isCorrect) Color(0xFFD7FFB8) else Color.Red
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ReusableModalBottomSheet(
-    sheetState: SheetState,
-    scope: CoroutineScope,
-    showBottomSheet: Boolean,
-    onDismiss: () -> Unit,
-    onContinueClicked: () -> Unit,
-    buttonText: String,
-    buttonColor: Color,
-    textColor: Color,
-    titleText: String,
-    titleColor: Color
-) {
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            sheetState = sheetState,
-            shape = RectangleShape,
-            containerColor = Color(0xFFD7FFB8),
-            onDismissRequest = onDismiss
-        ) {
-            Surface(color = Color(0xFFD7FFB8)) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = titleText,
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = titleColor,
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
-                    )
-
-                    Spacer(Modifier.height(10.dp))
-
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                sheetState.hide()
-                            }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    onContinueClicked()
-                                }
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
-                        modifier = Modifier
-                            .padding(bottom = 30.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = buttonText,
-                            color = textColor,
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
             }
         }
     }
@@ -267,7 +190,7 @@ fun ProgressBar(progress: Float, modifier: Modifier = Modifier) {
 @Composable
 fun QuestionScreenPreview() {
     SAPATheme {
-        QuestionScreen(id = 2, navigateBack = {}, navigateFinish = {})
+        QuestionScreen(id = 2, navigateBack = {}, navigateFinish = {_,_ ->})
     }
 }
 
@@ -298,7 +221,7 @@ fun QuestionCard(modifier: Modifier = Modifier) {
 
             Image(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxSize(),
                 painter = painterResource(id = R.drawable.ic_launcher_background),
                 contentDescription = "image description",
                 contentScale = ContentScale.FillBounds

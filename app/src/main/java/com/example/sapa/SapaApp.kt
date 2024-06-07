@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -87,9 +88,9 @@ fun SapaApp(
                        navigateBack = {
                            navController.navigateUp()
                        },
-                       navigateFinish = {
+                       navigateFinish = {xp, heart ->
                            navController.popBackStack()
-                           navController.navigate(Screen.Congratulation.route)
+                           navController.navigate(Screen.Congratulation.createRoute(xp, heart))
                        })
                } else{
                    ExamScreen(
@@ -101,9 +102,18 @@ fun SapaApp(
             }
 
             composable(
-                route = Screen.Congratulation.route
+                route = Screen.Congratulation.route,
+                arguments = listOf(
+                    navArgument("xp") { type = NavType.IntType },
+                    navArgument("heart") { type = NavType.IntType }
+                )
             ){
+                val backStackEntry = remember { it }
+                val heart = backStackEntry.arguments?.getInt("heart") ?: 0
+                val xp = backStackEntry.arguments?.getInt("xp") ?: 0
                 CongratulationScreen(
+                    heart = heart,
+                    xp = xp,
                     navigateBack = {
                         navController.popBackStack()
                         navController.navigate(Screen.Home.route){

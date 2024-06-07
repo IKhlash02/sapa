@@ -35,6 +35,8 @@ import com.example.sapa.ui.theme.SAPATheme
 fun CongratulationScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
+    xp: Int,
+    heart: Int,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -64,14 +66,14 @@ fun CongratulationScreen(
         Row {
             TotalComponent(
                 image = R.drawable.total_xp,
-                level = 5,
+                level = xp,
                 color = Color(0xFFF2BC3B),
                 type = R.drawable.xp
             )
             Spacer(modifier = Modifier.width(20.dp))
             TotalComponent(
                 image = R.drawable.total_level,
-                level = 5,
+                level = heart,
                 color = Color(0xFFFB8500),
                 type = R.drawable.level_2
             )
@@ -92,7 +94,7 @@ fun CongratulationScreen(
 @Composable
 private fun CongratulationPreview() {
     SAPATheme {
-        CongratulationScreen(navigateBack = {})
+        CongratulationScreen(navigateBack = {}, xp = 1, heart = 2)
     }
 }
 

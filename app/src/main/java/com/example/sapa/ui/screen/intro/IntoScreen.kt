@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,9 +28,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sapa.R
 import com.example.sapa.ui.component.AnimatedPreloader
+import com.example.sapa.ui.component.IconButton
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.theme.SAPATheme
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +40,7 @@ fun IntroScreen(
     modifier: Modifier = Modifier,
     navigateHome: () -> Unit
 ) {
+
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -112,7 +114,7 @@ fun IntroScreen(
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
-                    OptionButton(
+                    IconButton(
                         modifier = Modifier.padding(bottom = 30.dp),
                         optionText = "Log In with Google", onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {

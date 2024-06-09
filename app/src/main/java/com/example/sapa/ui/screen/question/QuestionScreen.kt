@@ -26,6 +26,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -39,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -46,9 +48,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.sapa.R
+import com.example.sapa.di.Injection
 import com.example.sapa.model.DetailData
+import com.example.sapa.ui.MainViewModel
+import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
@@ -60,9 +66,17 @@ fun QuestionScreen(
     modifier: Modifier = Modifier,
     id: Int,
     navigateBack: () -> Unit,
-    navigateFinish: (Int, Int) -> Unit
+    navigateFinish: () -> Unit
 ) {
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
+
+    val context = LocalContext.current
+    val viewModel: MainViewModel = viewModel(
+        factory = ViewModelFactory(
+            Injection.provideUserRepository(context)
+        )
+    )
+    val userData = viewModel.userData.collectAsState().value
 
     var progress by remember { mutableFloatStateOf(0F) }
     val questions = DetailData.signLanguageAlphabetQuestions
@@ -74,9 +88,6 @@ fun QuestionScreen(
 
     Log.d("soal", "index: $currentQuestionIndex")
     Log.d("soal", "progress: $progress")
-
-
-    var heart by remember { mutableStateOf(5) }
 
     Column(
         modifier = modifier
@@ -107,7 +118,7 @@ fun QuestionScreen(
             Icon(imageVector = Icons.Filled.Favorite, contentDescription = null, tint = Color.Red)
             Spacer(modifier = Modifier.width(5.dp))
             Text(
-                text = "$heart",
+                text = "${userData.heart}",
                 style = TextStyle(
                     fontSize = 20.sp,
 //                fontFamily = FontFamily(Font(R.font.poppins)),
@@ -178,25 +189,20 @@ fun QuestionScreen(
                             }
 
                             if(!isAnswerCorrect){
-                                heart--
+                                viewModel.decreaseHeart()
                             }
 
-                            if(heart == 0){
+                            if(userData.heart == 0){
                                 navigateBack()
-                            }
-
-                            progress += 0.2F
-                            if(progress >= 1F){
-                                navigateFinish(5, 5)
-//                                progress = 0F
-
-
                             } else{
-                                currentQuestionIndex++
+                                progress += 0.2F
+                                if(progress >= 1F) {
+                                    viewModel.increasePoint()
+                                    navigateFinish()
+                                } else{
+                                    currentQuestionIndex++
+                                }
                             }
-
-
-
                         },
                         colorButton = if (isAnswerCorrect) Color(0xFF58CC02) else Color(0xFFFF4B4C),
                         colorText = Color(0xFFFFFFFF)
@@ -227,7 +233,7 @@ fun ProgressBar(progress: Float, modifier: Modifier = Modifier) {
 @Composable
 fun QuestionScreenPreview() {
     SAPATheme {
-        QuestionScreen(id = 2, navigateBack = {}, navigateFinish = {_,_ ->})
+        QuestionScreen(id = 2, navigateBack = {}, navigateFinish = {})
     }
 }
 

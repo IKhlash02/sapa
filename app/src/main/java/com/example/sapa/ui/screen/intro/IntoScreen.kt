@@ -115,6 +115,7 @@ fun IntroScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     IconButton(
+                        image = R.drawable.google,
                         modifier = Modifier.padding(bottom = 30.dp),
                         optionText = "Log In with Google", onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {

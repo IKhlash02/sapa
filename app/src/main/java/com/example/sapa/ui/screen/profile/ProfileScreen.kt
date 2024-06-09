@@ -21,6 +21,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +42,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sapa.R
+import com.example.sapa.di.Injection
+import com.example.sapa.ui.MainViewModel
+import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.theme.SAPATheme
 import kotlinx.coroutines.launch
 
@@ -50,6 +56,15 @@ fun ProfileScreen(
     modifier: Modifier = Modifier
 ) {
 
+    val context = LocalContext.current
+
+    val viewModel: MainViewModel = viewModel(
+        factory = ViewModelFactory(
+            Injection.provideUserRepository(context)
+        )
+    )
+    val userData = viewModel.userData.collectAsState().value
+
     var showBottomSheet by remember { mutableStateOf(true) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -58,7 +73,7 @@ fun ProfileScreen(
     ) {
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
@@ -84,15 +99,6 @@ fun ProfileScreen(
                     fontWeight = FontWeight(800),
                     color = Color(0xFF000000),
                     textAlign = TextAlign.Center,
-                )
-            )
-            Text(
-                text = "johnlbf77",
-                style = TextStyle(
-                    fontSize = 16.sp,
-//                fontFamily = FontFamily(Font(R.font.nunito)),
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF000000),
                 )
             )
             Spacer(modifier = Modifier.height(23.dp))
@@ -137,7 +143,7 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CardStat(
-                    title = "5",
+                    title = "${userData.point}",
                     description = "XP didapat",
                     painter = painterResource(
                         id = R.drawable.xp
@@ -145,7 +151,7 @@ fun ProfileScreen(
                 )
                 Spacer(modifier = Modifier.width(13.dp))
                 CardStat(
-                    title = "2",
+                    title = "${userData.heart}",
                     description = "Nyawa tersisa",
                     painter = painterResource(
                         id = R.drawable.heart

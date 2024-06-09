@@ -3,8 +3,10 @@ package com.example.sapa.ui.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -22,15 +24,19 @@ import com.example.sapa.R
 import com.example.sapa.ui.theme.SAPATheme
 
 @Composable
-fun IconButton(
-    optionText: String,
-    onClick: () -> Unit,
+fun ButtonComponent2(
     modifier: Modifier = Modifier,
+    enable: Boolean = true,
+    optionText1: String,
+    optionText2: String,
+    onClick: () -> Unit,
     colorButton: Color = Color.White,
     colorText: Color = Color.Black,
-    @DrawableRes image: Int,
+    @DrawableRes image1: Int,
+    @DrawableRes image2: Int,
 ) {
     ElevatedButton(
+        enabled = enable,
         colors = ButtonDefaults.buttonColors(
             colorButton
         ),
@@ -41,28 +47,52 @@ fun IconButton(
         shape = RoundedCornerShape(10.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+
             Image(
-                painter = painterResource(id = image),
+                painter = painterResource(id = image1),
+                contentDescription = "image description",
+                contentScale = ContentScale.None
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = optionText1,
+                color = colorText,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+            Spacer(modifier = Modifier.weight(1F))
+            Text(
+                text = optionText2,
+                color = colorText,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+            Image(
+                painter = painterResource(id = image2),
                 contentDescription = "image description",
                 contentScale = ContentScale.None
             )
 
-            Text(
-                text = optionText,
-                color = colorText,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-            )
+
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun IconButtonPreview(){
+private fun ButtonComponent2Preview() {
     SAPATheme {
-        IconButton(optionText = "ss", onClick = { /*TODO*/ }, image = R.drawable.google)
+        ButtonComponent2(
+            optionText1 = "ss",
+            onClick = { /*TODO*/ },
+            image1 = R.drawable.google,
+            optionText2 = "ss",
+            image2 = R.drawable.google
+        )
     }
 }

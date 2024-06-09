@@ -1,5 +1,6 @@
 package com.example.sapa
 
+import android.content.Context
 import android.media.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -88,9 +89,9 @@ fun SapaApp(
                        navigateBack = {
                            navController.navigateUp()
                        },
-                       navigateFinish = {xp, heart ->
+                       navigateFinish = {
                            navController.popBackStack()
-                           navController.navigate(Screen.Congratulation.createRoute(xp, heart))
+                           navController.navigate(Screen.Congratulation.route)
                        })
                } else{
                    ExamScreen(
@@ -103,17 +104,8 @@ fun SapaApp(
 
             composable(
                 route = Screen.Congratulation.route,
-                arguments = listOf(
-                    navArgument("xp") { type = NavType.IntType },
-                    navArgument("heart") { type = NavType.IntType }
-                )
             ){
-                val backStackEntry = remember { it }
-                val heart = backStackEntry.arguments?.getInt("heart") ?: 0
-                val xp = backStackEntry.arguments?.getInt("xp") ?: 0
                 CongratulationScreen(
-                    heart = heart,
-                    xp = xp,
                     navigateBack = {
                         navController.popBackStack()
                         navController.navigate(Screen.Home.route){
@@ -214,7 +206,10 @@ private fun BottomBar(
 @Preview(showBackground = true)
 @Composable
 private fun SapaAppPreview() {
+
+
     SAPATheme {
+
         SapaApp()
     }
 }

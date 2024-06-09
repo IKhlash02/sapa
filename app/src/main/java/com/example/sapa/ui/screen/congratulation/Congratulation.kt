@@ -14,10 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,7 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sapa.R
+import com.example.sapa.di.Injection
+import com.example.sapa.ui.MainViewModel
+import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.AnimatedPreloader
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.theme.SAPATheme
@@ -35,9 +41,17 @@ import com.example.sapa.ui.theme.SAPATheme
 fun CongratulationScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
-    xp: Int,
-    heart: Int,
 ) {
+
+    val context = LocalContext.current
+    val viewModel: MainViewModel = viewModel(
+        factory = ViewModelFactory(
+            Injection.provideUserRepository(context)
+        )
+    )
+    val userData = viewModel.userData.collectAsState().value
+
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -66,14 +80,14 @@ fun CongratulationScreen(
         Row {
             TotalComponent(
                 image = R.drawable.total_xp,
-                level = xp,
+                level = userData.point,
                 color = Color(0xFFF2BC3B),
                 type = R.drawable.xp
             )
             Spacer(modifier = Modifier.width(20.dp))
             TotalComponent(
                 image = R.drawable.total_level,
-                level = heart,
+                level = userData.level,
                 color = Color(0xFFFB8500),
                 type = R.drawable.level_2
             )
@@ -94,7 +108,7 @@ fun CongratulationScreen(
 @Composable
 private fun CongratulationPreview() {
     SAPATheme {
-        CongratulationScreen(navigateBack = {}, xp = 1, heart = 2)
+        CongratulationScreen(navigateBack = {})
     }
 }
 

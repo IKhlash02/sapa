@@ -1,11 +1,10 @@
 package com.example.sapa.ui.screen.exam
 
+import android.util.Log
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,20 +23,26 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sapa.R
-import com.example.sapa.ui.component.CameraPreviewScreen
+import androidx.core.content.ContextCompat
+import com.example.sapa.ui.component.camerax.CameraPreviewScreen
+import com.example.sapa.ui.component.camerax.Classification
+import com.example.sapa.ui.component.camerax.SignClassifierAnalyzer
+import com.example.sapa.ui.component.camerax.TfLiteSignClassifier
 import com.example.sapa.ui.screen.question.ProgressBar
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
@@ -49,13 +54,42 @@ fun ExamScreen(
     navigateBack: () -> Unit
 ) {
 
+    val progress by remember {
+        mutableIntStateOf(0)
+    }
     val context = LocalContext.current
+
+    var classification by remember {
+        Log.d("ExamScreen", "start")
+        mutableStateOf(emptyList<Classification>())
+    }
+
+    val analyzer = remember {
+        SignClassifierAnalyzer(
+            classifier = TfLiteSignClassifier(
+                context = context
+            ),
+            onResults = {
+                Log.d("ExamScreen", "$it")
+                classification = it
+            }
+        )
+    }
+
+
     val controller = remember {
 
         LifecycleCameraController(context).apply {
-            setEnabledUseCases(
-                CameraController.IMAGE_ANALYSIS
-            )
+            try {
+                setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
+                setImageAnalysisAnalyzer(
+                    ContextCompat.getMainExecutor(context),
+                    analyzer
+                )
+                Log.d("ExamScreen", "CameraController setup completed")
+            } catch (e: Exception) {
+                Log.e("ExamScreen", "Error setting up CameraController", e)
+            }
         }
     }
 
@@ -73,14 +107,16 @@ fun ExamScreen(
                 onClick = navigateBack,
                 content = {
                     Icon(
-                        modifier = Modifier.padding(0.dp).size(30.dp),
+                        modifier = Modifier
+                            .padding(0.dp)
+                            .size(30.dp),
                         imageVector = Icons.Filled.Close,
                         contentDescription = null,
                         tint = Color.White
                     )
                 },
             )
-            ProgressBar(progress = 1f, modifier.weight(1F))
+            ProgressBar(progress = progress.toFloat(), modifier.weight(1F))
             Spacer(modifier = Modifier.width(10.dp))
             Icon(imageVector = Icons.Filled.Favorite, contentDescription = null, tint = Color.Red)
             Spacer(modifier = Modifier.width(5.dp))
@@ -100,6 +136,10 @@ fun ExamScreen(
             controller
         )
         Spacer(modifier = Modifier.height(70.dp))
+        classification.forEach {
+            Log.d("ExamScreen", "Detect: ${it.nama}")
+        }
+
     }
 
 

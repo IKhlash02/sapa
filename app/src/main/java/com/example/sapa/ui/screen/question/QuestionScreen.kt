@@ -1,5 +1,6 @@
 package com.example.sapa.ui.screen.question
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,7 +46,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.sapa.R
+import com.example.sapa.model.DetailData
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
@@ -57,12 +62,21 @@ fun QuestionScreen(
     navigateBack: () -> Unit,
     navigateFinish: (Int, Int) -> Unit
 ) {
+    var currentQuestionIndex by remember { mutableIntStateOf(0) }
 
+    var progress by remember { mutableFloatStateOf(0F) }
+    val questions = DetailData.signLanguageAlphabetQuestions
+    val currentQuestion = questions[currentQuestionIndex]
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     var isAnswerCorrect by remember { mutableStateOf(true) }
 
+    Log.d("soal", "index: $currentQuestionIndex")
+    Log.d("soal", "progress: $progress")
+
+
+    var heart by remember { mutableStateOf(5) }
 
     Column(
         modifier = modifier
@@ -79,19 +93,21 @@ fun QuestionScreen(
                 onClick = navigateBack,
                 content = {
                     Icon(
-                        modifier = Modifier.padding(0.dp).size(30.dp),
+                        modifier = Modifier
+                            .padding(0.dp)
+                            .size(30.dp),
                         imageVector = Icons.Filled.Close,
                         contentDescription = null,
                         tint = Color.White
                     )
                 },
             )
-            ProgressBar(progress = 1f, modifier.weight(1F))
+            ProgressBar(progress = progress, modifier.weight(1F))
             Spacer(modifier = Modifier.width(10.dp))
             Icon(imageVector = Icons.Filled.Favorite, contentDescription = null, tint = Color.Red)
             Spacer(modifier = Modifier.width(5.dp))
             Text(
-                text = "5",
+                text = "$heart",
                 style = TextStyle(
                     fontSize = 20.sp,
 //                fontFamily = FontFamily(Font(R.font.poppins)),
@@ -101,27 +117,29 @@ fun QuestionScreen(
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
-        QuestionCard(modifier = Modifier.weight(1f))
+        QuestionCard(modifier = Modifier.weight(1f), imageUrl = currentQuestion.Image)
         Spacer(modifier = Modifier.height(16.dp))
 
 
-        OptionButton("Option 1", onClick = {
+        OptionButton(currentQuestion.option1, onClick = {
             showBottomSheet = true
-            isAnswerCorrect = true
+            isAnswerCorrect = currentQuestion.answer == currentQuestion.option1
         }
         )
-        OptionButton("Option 2", onClick = {
+        OptionButton(currentQuestion.option2, onClick = {
             showBottomSheet = true
-            isAnswerCorrect = false
+            isAnswerCorrect = currentQuestion.answer == currentQuestion.option2
         })
-        OptionButton("Option 3", onClick = {
+        OptionButton(currentQuestion.option3, onClick = {
             showBottomSheet = true
-            isAnswerCorrect = false
+            isAnswerCorrect = currentQuestion.answer == currentQuestion.option3
         })
-        OptionButton("Option 4", onClick = {
+        OptionButton(currentQuestion.option4, onClick = {
             showBottomSheet = true
-            isAnswerCorrect = false
+            isAnswerCorrect = currentQuestion.answer == currentQuestion.option4
         })
+
+
         Spacer(modifier = Modifier.height(30.dp))
 
         if (showBottomSheet) {
@@ -159,7 +177,26 @@ fun QuestionScreen(
                                 }
                             }
 
-                            navigateFinish(5, 2)
+                            if(!isAnswerCorrect){
+                                heart--
+                            }
+
+                            if(heart == 0){
+                                navigateBack()
+                            }
+
+                            progress += 0.2F
+                            if(progress >= 1F){
+                                navigateFinish(5, 5)
+//                                progress = 0F
+
+
+                            } else{
+                                currentQuestionIndex++
+                            }
+
+
+
                         },
                         colorButton = if (isAnswerCorrect) Color(0xFF58CC02) else Color(0xFFFF4B4C),
                         colorText = Color(0xFFFFFFFF)
@@ -195,7 +232,7 @@ fun QuestionScreenPreview() {
 }
 
 @Composable
-fun QuestionCard(modifier: Modifier = Modifier) {
+fun QuestionCard(modifier: Modifier = Modifier, imageUrl: String) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -222,7 +259,7 @@ fun QuestionCard(modifier: Modifier = Modifier) {
             Image(
                 modifier = Modifier
                     .fillMaxSize(),
-                painter = painterResource(id = R.drawable.ic_launcher_background),
+                painter = rememberAsyncImagePainter(imageUrl),
                 contentDescription = "image description",
                 contentScale = ContentScale.FillBounds
             )
@@ -230,8 +267,8 @@ fun QuestionCard(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewQuestionCard() {
-    QuestionCard()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewQuestionCard() {
+//    QuestionCard()
+//}

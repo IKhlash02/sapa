@@ -11,3 +11,13 @@ data class Unit(
     val namaTopik: String,
     val stages: List<Stage>
 )
+
+data class StageDetail(
+    val question_id: Int,
+    val Image: String,
+    val option1: String,
+    val option2: String,
+    val option3: String,
+    val option4: String,
+    val answer: String
+)

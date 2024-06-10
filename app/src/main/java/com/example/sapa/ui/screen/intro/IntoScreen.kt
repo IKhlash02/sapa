@@ -31,6 +31,7 @@ import com.example.sapa.ui.component.AnimatedPreloader
 import com.example.sapa.ui.component.IconButton
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.theme.SAPATheme
+import com.example.sapa.ui.theme.nunitoFontFamily
 import kotlinx.coroutines.launch
 
 
@@ -64,8 +65,8 @@ fun IntroScreen(
             text = "SAPA",
             style = TextStyle(
                 fontSize = 35.sp,
-//                fontFamily = FontFamily(Font(R.font.montserrat alternates)),
-                fontWeight = FontWeight(700),
+                fontFamily = nunitoFontFamily,
+                fontWeight = FontWeight.Bold,
                 color = Color(0xFF219EBC),
                 textAlign = TextAlign.Center,
                 letterSpacing = 3.5.sp,
@@ -76,8 +77,8 @@ fun IntroScreen(
             text = "Aplikasi pembelajaran bahasa isyarat yang menyenangkan dan efektif!",
             style = TextStyle(
                 fontSize = 20.sp,
-//                fontFamily = FontFamily(Font(R.font.nunito)),
-                fontWeight = FontWeight(600),
+                fontFamily = nunitoFontFamily,
+                fontWeight = FontWeight.SemiBold,
                 color = Color(0xFF4B4B4B),
                 textAlign = TextAlign.Center,
             )

@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.sapa.R
 import com.example.sapa.di.Injection
 import com.example.sapa.model.DetailData
 import com.example.sapa.ui.MainViewModel
@@ -58,6 +56,7 @@ import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
+import com.example.sapa.ui.theme.nunitoFontFamily
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -121,9 +120,9 @@ fun QuestionScreen(
                 text = "${userData.heart}",
                 style = TextStyle(
                     fontSize = 20.sp,
-//                fontFamily = FontFamily(Font(R.font.poppins)),
+                    fontFamily = nunitoFontFamily,
                     color = Color.White,
-                    fontWeight = FontWeight(600),
+                    fontWeight = FontWeight.SemiBold,
                 )
             )
         }
@@ -171,8 +170,8 @@ fun QuestionScreen(
                         text = if (isAnswerCorrect) "Benar" else "Salah",
                         style = TextStyle(
                             fontSize = 24.sp,
-//                               fontFamily = FontFamily(Font(R.font.nunito)),
-                            fontWeight = FontWeight(800),
+                            fontFamily = nunitoFontFamily,
+                            fontWeight = FontWeight.ExtraBold,
                             color = if (isAnswerCorrect) Color(0xFF58A700) else Color(0xFFEA2B26),
                             textAlign = TextAlign.Center,
                         )
@@ -188,18 +187,19 @@ fun QuestionScreen(
                                 }
                             }
 
-                            if(!isAnswerCorrect){
+                            if (!isAnswerCorrect) {
                                 viewModel.decreaseHeart()
                             }
 
-                            if(userData.heart == 0){
+                            if (userData.heart == 0 && !isAnswerCorrect) {
                                 navigateBack()
-                            } else{
+                            } else {
                                 progress += 0.2F
-                                if(progress >= 1F) {
+                                if (progress >= 1F) {
                                     viewModel.increasePoint()
+                                    viewModel.increaseCompleted()
                                     navigateFinish()
-                                } else{
+                                } else {
                                     currentQuestionIndex++
                                 }
                             }
@@ -218,14 +218,12 @@ fun QuestionScreen(
 @Composable
 fun ProgressBar(progress: Float, modifier: Modifier = Modifier) {
     LinearProgressIndicator(
-        progress = progress,
+        progress = { progress },
         modifier = modifier
             .height(13.dp),
         color = Color(0xFFFFB703),
         trackColor = Color.White,
-        strokeCap = StrokeCap.Round
-
-
+        strokeCap = StrokeCap.Round,
     )
 }
 
@@ -255,8 +253,8 @@ fun QuestionCard(modifier: Modifier = Modifier, imageUrl: String) {
                 text = "Jawab pertanyaan berikut:",
                 style = TextStyle(
                     fontSize = 24.sp,
-//                    fontFamily = FontFamily(Font(R.font.nunito)),
-                    fontWeight = FontWeight(700),
+                    fontFamily =  nunitoFontFamily,
+                    fontWeight = FontWeight.Bold,
                     color = Color(0xFF000000),
                     textAlign = TextAlign.Center,
                 ),
@@ -272,9 +270,3 @@ fun QuestionCard(modifier: Modifier = Modifier, imageUrl: String) {
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewQuestionCard() {
-//    QuestionCard()
-//}

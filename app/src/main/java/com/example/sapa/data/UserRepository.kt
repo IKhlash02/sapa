@@ -29,6 +29,10 @@ class UserRepository private constructor(
        userPreference.updateUserHeart(heart)
     }
 
+    suspend fun updateUserCompleted(completed: Int) {
+        userPreference.updateUserCompleted(completed)
+    }
+
 
     fun getUserData(): Flow<UserModel> {
         return userPreference.getUserData()

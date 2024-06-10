@@ -35,6 +35,7 @@ import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.AnimatedPreloader
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.theme.SAPATheme
+import com.example.sapa.ui.theme.nunitoFontFamily
 
 
 @Composable
@@ -147,8 +148,8 @@ private fun TotalComponent(
                 text = "$level",
                 style = TextStyle(
                     fontSize = 18.sp,
-//                                fontFamily = FontFamily(Font(R.font.nunito)),
-                    fontWeight = FontWeight(900),
+                    fontFamily = nunitoFontFamily,
+                    fontWeight = FontWeight.ExtraBold,
                     color = color,
                 )
             )

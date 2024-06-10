@@ -3,6 +3,7 @@ package com.example.sapa.ui.screen.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,12 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -48,7 +47,7 @@ import com.example.sapa.di.Injection
 import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.theme.SAPATheme
-import kotlinx.coroutines.launch
+import com.example.sapa.ui.theme.nunitoFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,107 +67,121 @@ fun ProfileScreen(
     var showBottomSheet by remember { mutableStateOf(true) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    Column(
-
+    Box(
+        modifier = modifier.fillMaxWidth()
     ) {
 
+        Image(
+            modifier = Modifier.fillMaxWidth(),
+            painter = painterResource(id = R.drawable.rainbow),
+            contentDescription = "image description",
+            contentScale = ContentScale.Crop
+        )
+
         Column(
-            modifier = Modifier.fillMaxWidth().padding(top = 30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(top = 60.dp)
         ) {
-            Image(
+
+            Column(
                 modifier = Modifier
-                    .border(
-                        width = 2.dp,
-                        color = Color(0xFFFFFFFF),
-                        shape = RoundedCornerShape(size = 103.dp)
-                    )
-                    .width(103.dp)
-                    .height(103.dp)
-                    .clip(CircleShape),
-                painter = painterResource(id = R.drawable.ic_launcher_background),
-                contentDescription = "image description",
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "John Doe",
-                style = TextStyle(
-                    fontSize = 35.sp,
-//                fontFamily = FontFamily(Font(R.font.nunito)),
-                    fontWeight = FontWeight(800),
-                    color = Color(0xFF000000),
-                    textAlign = TextAlign.Center,
-                )
-            )
-            Spacer(modifier = Modifier.height(23.dp))
-        }
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            Text(
-                text = "Statistik",
-                style = TextStyle(
-                    fontSize = 20.sp,
-//                fontFamily = FontFamily(Font(R.font.nunito)),
-                    fontWeight = FontWeight(700),
-                    color = Color(0xFF000000),
-                )
-            )
-            Spacer(modifier = Modifier.height(14.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CardStat(
-                    title = "72 jam",
-                    description = "Waktu dihabiskan",
-                    painter = painterResource(
-                        id = R.drawable.time
+
+                Image(
+                    modifier = Modifier
+                        .border(
+                            width = 2.dp,
+                            color = Color(0xFFFFFFFF),
+                            shape = RoundedCornerShape(size = 103.dp)
+                        )
+                        .width(103.dp)
+                        .height(103.dp)
+                        .clip(CircleShape),
+                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    contentDescription = "image description",
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = userData.name,
+                    style = TextStyle(
+                        fontSize = 35.sp,
+                        fontFamily = nunitoFontFamily,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF000000),
+                        textAlign = TextAlign.Center,
                     )
                 )
-                Spacer(modifier = Modifier.width(13.dp))
-                CardStat(
-                    title = "2",
-                    description = "Level dicapai",
-                    painter = painterResource(
-                        id = R.drawable.level
+                Spacer(modifier = Modifier.height(23.dp))
+            }
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = "Statistik",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontFamily = nunitoFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF000000),
+                    )
+                )
+                Spacer(modifier = Modifier.height(14.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    CardStat(
+                        title = "72 jam",
+                        description = "Waktu dihabiskan",
+                        painter = painterResource(
+                            id = R.drawable.time
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(13.dp))
+                    CardStat(
+                        title = "2",
+                        description = "Level dicapai",
+                        painter = painterResource(
+                            id = R.drawable.level
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    CardStat(
+                        title = "${userData.point}",
+                        description = "XP didapat",
+                        painter = painterResource(
+                            id = R.drawable.xp
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(13.dp))
+                    CardStat(
+                        title = "${userData.heart}",
+                        description = "Nyawa tersisa",
+                        painter = painterResource(
+                            id = R.drawable.heart
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "Peringkat Dunia",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontFamily = nunitoFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF000000),
                     )
                 )
             }
-
-            Spacer(modifier = Modifier.height(14.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                CardStat(
-                    title = "${userData.point}",
-                    description = "XP didapat",
-                    painter = painterResource(
-                        id = R.drawable.xp
-                    )
-                )
-                Spacer(modifier = Modifier.width(13.dp))
-                CardStat(
-                    title = "${userData.heart}",
-                    description = "Nyawa tersisa",
-                    painter = painterResource(
-                        id = R.drawable.heart
-                    )
-                )
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                text = "Peringkat Dunia",
-                style = TextStyle(
-                    fontSize = 20.sp,
-//                    fontFamily = FontFamily(Font(R.font.nunito)),
-                    fontWeight = FontWeight(700),
-                    color = Color(0xFF000000),
-                )
-            )
         }
     }
 }
@@ -225,8 +238,8 @@ private fun CardStat(
                     text = title,
                     style = TextStyle(
                         fontSize = 20.sp,
-//                                  fontFamily = FontFamily(Font(R.font.nunito)),
-                        fontWeight = FontWeight(700),
+                        fontFamily = nunitoFontFamily,
+                        fontWeight = FontWeight.Bold,
                         color = Color(0xFF000000),
                     )
                 )
@@ -235,8 +248,8 @@ private fun CardStat(
                     text = description,
                     style = TextStyle(
                         fontSize = 14.sp,
-//                                  fontFamily = FontFamily(Font(R.font.nunito)),
-                        fontWeight = FontWeight(500),
+                        fontFamily = nunitoFontFamily,
+                        fontWeight = FontWeight.Medium,
                         color = Color(0xFF000000),
                     )
                 )

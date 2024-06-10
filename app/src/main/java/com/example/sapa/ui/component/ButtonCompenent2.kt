@@ -17,11 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sapa.R
 import com.example.sapa.ui.theme.SAPATheme
+import com.example.sapa.ui.theme.nunitoFontFamily
 
 @Composable
 fun ButtonComponent2(
@@ -59,15 +62,23 @@ fun ButtonComponent2(
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = optionText1,
-                color = colorText,
-                fontSize = 18.sp,
+                style = TextStyle(
+                    color = colorText,
+                    fontFamily = nunitoFontFamily,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 18.sp,
+                ),
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             Spacer(modifier = Modifier.weight(1F))
             Text(
                 text = optionText2,
-                color = colorText,
-                fontSize = 18.sp,
+                style = TextStyle(
+                    color = colorText,
+                    fontFamily = nunitoFontFamily,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 18.sp,
+                ),
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 

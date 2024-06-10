@@ -5,5 +5,6 @@ data class UserModel(
     var name: String,
     var level: Int,
     var point: Int,
-    var heart: Int
+    var heart: Int,
+    var completed: Int,
 )

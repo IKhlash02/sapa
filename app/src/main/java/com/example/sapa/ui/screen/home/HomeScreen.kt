@@ -24,6 +24,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,18 +48,18 @@ import com.example.sapa.model.UnitData
 import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.ButtonComponent2
-import com.example.sapa.ui.component.IconButton
 import com.example.sapa.ui.component.StageItem
 import com.example.sapa.ui.component.UnitItem
 import com.example.sapa.ui.theme.PacificBlue
 import com.example.sapa.ui.theme.SAPATheme
+import com.example.sapa.ui.theme.nunitoFontFamily
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navigatToQuestion: (Int) -> Unit,
+    navigateToQuestion: (Int) -> Unit,
 
     ) {
     val sheetState = rememberModalBottomSheetState()
@@ -73,12 +74,12 @@ fun HomeScreen(
         )
     )
     val userData = viewModel.userData.collectAsState().value
-    Log.d("HomeSreen", "data: ${viewModel.userData.collectAsState().value}")
+        Log.d("HomeScreen", "data: ${viewModel.userData.collectAsState().value}")
 
 
     Scaffold(
         topBar = {
-            topBar(
+            TopBar(
                 userModel = userData,
                 onClick = {
                     showBottomSheet = true
@@ -87,37 +88,43 @@ fun HomeScreen(
         }
     ) { innerPadding ->
         var stageOffsetWeight = 1f
-        var boolen = true
+        var boolean = true
         LazyColumn(
             modifier.padding(innerPadding)
         ) {
             items(UnitData.units) { item ->
                 UnitItem(
                     noUnit = item.unitNo,
-                    namaTopik = item.namaTopik
+                    namaTopik = item.namaTopik,
+                    enabled = true
                 )
-                item.stages.forEach { stage ->
+                item.stages.forEach{ stage ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = (stageOffsetWeight * 47).dp)
                     ) {
+                        Log.d("HomeScreen1", "${stage.id} : ${item.id}")
                         StageItem(
+                            unitId = item.id,
+                            enabled = stage.id <= userData.completed,
                             stage = stage.noStage,
                             modifier = Modifier
                                 .padding(top = 20.dp)
-                                .clickable { navigatToQuestion(stage.id) }
-
+                                .clickable(enabled = stage.id <= userData.completed) {
+                                    navigateToQuestion(stage.id)
+                                }
                         )
+
                     }
-                    if (boolen) {
+                    if (boolean) {
                         stageOffsetWeight += 1f
                     } else {
                         stageOffsetWeight -= 1f
                     }
 
                 }
-                boolen = !boolen
+                boolean = !boolean
                 Spacer(modifier = modifier.height(20.dp))
             }
         }
@@ -141,8 +148,8 @@ fun HomeScreen(
                     text = if (userData.heart == 0) "Hatimu masih Penuh" else "Isi Ulang Hati",
                     style = TextStyle(
                         fontSize = 24.sp,
-//                               fontFamily = FontFamily(Font(R.font.nunito)),
-                        fontWeight = FontWeight(800),
+                        fontFamily = nunitoFontFamily,
+                        fontWeight = FontWeight.ExtraBold,
                         color = Color.Black,
                         textAlign = TextAlign.Center,
                     )
@@ -150,7 +157,7 @@ fun HomeScreen(
 
                 Spacer(Modifier.height(10.dp))
                 ButtonComponent2(
-                    enable = if(userData.heart == 5) false else true,
+                    enable = userData.heart != 5,
                     image1 = R.drawable.heart,
                     image2 = R.drawable.xp,
                     modifier = Modifier.padding(bottom = 30.dp),
@@ -178,7 +185,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun topBar(
+private fun TopBar(
     userModel: UserModel,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -202,9 +209,9 @@ private fun topBar(
             text = "${userModel.point}",
             style = TextStyle(
                 fontSize = 20.sp,
-//                fontFamily = FontFamily(Font(R.font.poppins)),
+                fontFamily = nunitoFontFamily,
                 color = Color.White,
-                fontWeight = FontWeight(600),
+                fontWeight = FontWeight.SemiBold,
             )
         )
         Text(
@@ -212,9 +219,9 @@ private fun topBar(
             text = "Level Dasar",
             style = TextStyle(
                 fontSize = 24.sp,
-//                fontFamily = FontFamily(Font(R.font.nunito)),
+                fontFamily = nunitoFontFamily,
                 color = Color.White,
-                fontWeight = FontWeight(800),
+                fontWeight = FontWeight.ExtraBold,
                 textAlign = TextAlign.Center,
             )
         )
@@ -229,9 +236,9 @@ private fun topBar(
                 text = "${userModel.heart}",
                 style = TextStyle(
                     fontSize = 20.sp,
-//                fontFamily = FontFamily(Font(R.font.poppins)),
+                    fontFamily = nunitoFontFamily,
                     color = Color.White,
-                    fontWeight = FontWeight(600),
+                    fontWeight = FontWeight.SemiBold,
                 )
             )
         }
@@ -243,6 +250,6 @@ private fun topBar(
 @Composable
 private fun HomeScreenPreview() {
     SAPATheme {
-        HomeScreen(navigatToQuestion = {})
+        HomeScreen(navigateToQuestion = {})
     }
 }

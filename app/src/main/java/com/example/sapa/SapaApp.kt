@@ -1,22 +1,14 @@
 package com.example.sapa
 
-import android.content.Context
-import android.media.Image
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -41,7 +33,6 @@ import com.example.sapa.ui.screen.profile.ProfileScreen
 import com.example.sapa.ui.screen.question.QuestionScreen
 import com.example.sapa.ui.theme.LightBlue
 import com.example.sapa.ui.theme.MidnightBlue
-import com.example.sapa.ui.theme.PacificBlue
 import com.example.sapa.ui.theme.SAPATheme
 
 
@@ -67,7 +58,7 @@ fun SapaApp(
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
-                    navigatToQuestion = {
+                    navigateToQuestion = {
                         navController.navigate(Screen.Question.createRoute(it))
                     }
                 )

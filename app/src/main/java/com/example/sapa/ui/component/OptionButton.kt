@@ -9,8 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sapa.ui.theme.nunitoFontFamily
 
 @Composable
 fun OptionButton(
@@ -31,9 +34,14 @@ fun OptionButton(
         shape = RoundedCornerShape(10.dp)
     ) {
         Text(
+            style = TextStyle(
+                color = colorText,
+                fontFamily = nunitoFontFamily,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 18.sp,
+            ),
             text = optionText,
-            color = colorText,
-            fontSize = 18.sp,
+
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
         )
     }

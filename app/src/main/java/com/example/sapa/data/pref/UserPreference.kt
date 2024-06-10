@@ -3,7 +3,6 @@ package com.example.sapa.data.pref
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -21,6 +20,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[LEVEL_KEY] = user.level
             preferences[POINT_KEY] = user.point
             preferences[HEART_KEY] = user.heart
+            preferences[COMPLETED_KEY] = user.completed
         }
     }
 
@@ -48,6 +48,12 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         }
     }
 
+    suspend fun updateUserCompleted(completed: Int) {
+        dataStore.edit { preferences ->
+            preferences[COMPLETED_KEY] = completed
+        }
+    }
+
 
 
 
@@ -57,7 +63,8 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
                 name = preferences[NAME_KEY] ?: "",
                 level = preferences[LEVEL_KEY] ?: 0,
                 point = preferences[POINT_KEY] ?: 0,
-                heart = preferences[HEART_KEY] ?: 5
+                heart = preferences[HEART_KEY] ?: 5,
+                completed = preferences[COMPLETED_KEY] ?: 1,
             )
         }
     }
@@ -76,6 +83,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private val POINT_KEY = intPreferencesKey("point")
         private val LEVEL_KEY = intPreferencesKey("level")
         private val HEART_KEY = intPreferencesKey("heart")
+        private val COMPLETED_KEY = intPreferencesKey("completed")
 
         fun getInstance(dataStore: DataStore<Preferences>): UserPreference {
             return INSTANCE ?: synchronized(this) {

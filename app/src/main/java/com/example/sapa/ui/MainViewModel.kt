@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val userRepository: UserRepository ): ViewModel() {
 
-    private val _userData = MutableStateFlow(UserModel("", 0, 0, 5))
+    private val _userData = MutableStateFlow(UserModel("", 0, 0, 5, 1))
     val userData = _userData.asStateFlow()
 
     init {
@@ -81,11 +81,20 @@ class MainViewModel(private val userRepository: UserRepository ): ViewModel() {
         }
     }
 
+    fun increaseCompleted() {
+        val currentCompleted = userData.value.completed
 
-
-    fun saveUserData(name: String, level: Int, points: Int, hearts: Int) {
+        val newCompleted = currentCompleted + 1
         viewModelScope.launch {
-            userRepository.saveUserData(UserModel(name, level, points, hearts))
+            userRepository.updateUserCompleted(newCompleted)
+        }
+    }
+
+
+
+    fun saveUserData(name: String, level: Int, points: Int, hearts: Int, completed: Int) {
+        viewModelScope.launch {
+            userRepository.saveUserData(UserModel(name, level, points, hearts, completed))
         }
     }
 

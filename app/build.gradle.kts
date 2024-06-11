@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("com.google.devtools.ksp")
-    id("kotlin-parcelize")
 }
 
 android {
@@ -85,14 +83,7 @@ dependencies {
 
     //tensorflow
     implementation(libs.tensorflow.lite.task.vision)
-    implementation(libs.tensorflow.lite.gpu.delegate.plugin)
-    implementation(libs.tensorflow.lite.gpu)
-
     implementation(libs.coil.compose)
-
-    //room
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.room.compiler)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 

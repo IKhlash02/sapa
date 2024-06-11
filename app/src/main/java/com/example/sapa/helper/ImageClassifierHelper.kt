@@ -6,7 +6,6 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.Surface
 import androidx.camera.core.ImageProxy
-import com.example.sapa.R
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.common.ops.CastOp
 import org.tensorflow.lite.support.image.ImageProcessor
@@ -17,11 +16,12 @@ import org.tensorflow.lite.task.core.vision.ImageProcessingOptions
 import org.tensorflow.lite.task.vision.classifier.Classifications
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 
-class ImageClassifierHelper(var threshold: Float = 0.1f,
-                            var maxResults: Int = 3,
-                            val modelName: String = "mobilenet_v1.tflite",
-                            val context: Context,
-                            val classifierListener: ClassifierListener?
+class ImageClassifierHelper(
+    var threshold: Float = 0.1f,
+    var maxResults: Int = 3,
+    val modelName: String = "model1.tflite",
+    val context: Context,
+    val classifierListener: ClassifierListener?
 ) {
     private var imageClassifier: ImageClassifier? = null
 

@@ -1,8 +1,6 @@
 package com.example.sapa.ui.screen.exam
 
 import android.util.Log
-import androidx.camera.view.CameraController
-import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,9 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,14 +34,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import com.example.sapa.ui.component.camerax.CameraPreviewScreen
-import com.example.sapa.ui.component.camerax.Classification
-import com.example.sapa.ui.component.camerax.SignClassifierAnalyzer
-import com.example.sapa.ui.component.camerax.TfLiteSignClassifier
+import com.example.sapa.helper.ImageClassifierHelper
+import com.example.sapa.ui.component.CameraPreview
 import com.example.sapa.ui.screen.question.ProgressBar
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
+import org.tensorflow.lite.task.vision.classifier.Classifications
 
 
 @Composable
@@ -59,38 +53,18 @@ fun ExamScreen(
     }
     val context = LocalContext.current
 
-    var classification by remember {
-        Log.d("ExamScreen", "start")
-        mutableStateOf(emptyList<Classification>())
-    }
-
-    val analyzer = remember {
-        SignClassifierAnalyzer(
-            classifier = TfLiteSignClassifier(
-                context = context
-            ),
-            onResults = {
-                Log.d("ExamScreen", "$it")
-                classification = it
+    val imageClassifierHelper = remember {
+        ImageClassifierHelper(context = context, classifierListener = object :
+            ImageClassifierHelper.ClassifierListener {
+            override fun onError(error: String) {
+                Log.d("ExamScreen", "error $error")
             }
-        )
-    }
 
-
-    val controller = remember {
-
-        LifecycleCameraController(context).apply {
-            try {
-                setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
-                setImageAnalysisAnalyzer(
-                    ContextCompat.getMainExecutor(context),
-                    analyzer
-                )
-                Log.d("ExamScreen", "CameraController setup completed")
-            } catch (e: Exception) {
-                Log.e("ExamScreen", "Error setting up CameraController", e)
+            override fun onResults(results: List<Classifications>?, inferenceTime: Long) {
+                Log.d("ExamScreen", "result: $results")
             }
-        }
+
+        })
     }
 
     Column(
@@ -124,7 +98,6 @@ fun ExamScreen(
                 text = "5",
                 style = TextStyle(
                     fontSize = 20.sp,
-//                fontFamily = FontFamily(Font(R.font.poppins)),
                     color = Color.White,
                     fontWeight = FontWeight(600),
                 )
@@ -133,19 +106,14 @@ fun ExamScreen(
         Spacer(modifier = Modifier.height(10.dp))
         QuestionCard(
             modifier = Modifier.weight(1F),
-            controller
+            imageClassifierHelper
         )
         Spacer(modifier = Modifier.height(70.dp))
-        classification.forEach {
-            Log.d("ExamScreen", "Detect: ${it.nama}")
-        }
 
     }
 
 
 }
-
-
 @Preview(showBackground = true)
 @Composable
 fun ExamScreenPreview() {
@@ -158,7 +126,7 @@ fun ExamScreenPreview() {
 @Composable
 fun QuestionCard(
     modifier: Modifier = Modifier,
-    controller: LifecycleCameraController
+    imageClassifierHelper: ImageClassifierHelper
 
 ) {
     Card(
@@ -185,11 +153,8 @@ fun QuestionCard(
                 ),
             )
 
-
-            CameraPreviewScreen(
-                controller = controller,
-                modifier = Modifier.fillMaxSize()
-
+            CameraPreview(
+                imageClassifierHelper
             )
         }
     }

@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sapa.R
 import com.example.sapa.ui.theme.PacificBlue
 import com.example.sapa.ui.theme.SAPATheme
 import com.example.sapa.ui.theme.nunitoFontFamily

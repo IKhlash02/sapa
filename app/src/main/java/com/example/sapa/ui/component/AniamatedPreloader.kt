@@ -13,11 +13,11 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 @Composable
 fun AnimatedPreloader(
     modifier: Modifier = Modifier,
-    @RawRes animatation: Int
+    @RawRes animation: Int
 ) {
     val preloaderLottieComposition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(
-            animatation
+            animation
         )
     )
 

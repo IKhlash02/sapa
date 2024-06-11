@@ -13,7 +13,7 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.imageclassifier.ImageClassifier
 
 class ImageClassifierHelper(
-    private var threshold: Float = 0.1f,
+    private var threshold: Float = 0.5f,
     private var maxResults: Int = 3,
     private val modelName: String = "model1.tflite",
     val context: Context,

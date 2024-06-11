@@ -61,7 +61,7 @@ fun CongratulationScreen(
     )
     {
         AnimatedPreloader(
-            animatation = R.raw.congratulation_animation,
+            animation = R.raw.congratulation_animation,
             modifier = Modifier
                 .width(376.dp)
                 .height(251.dp)
@@ -70,9 +70,8 @@ fun CongratulationScreen(
         Text(
             text = "Yeay, kamu berhasil!",
             style = TextStyle(
-//                fontSize = 25.sp,
-//                fontFamily = FontFamily(Font(R.font.nunito)),
-                fontWeight = FontWeight(700),
+                fontFamily = nunitoFontFamily,
+                fontWeight = FontWeight.Bold,
                 color = Color(0xFFFFB703),
                 textAlign = TextAlign.Center,
             )

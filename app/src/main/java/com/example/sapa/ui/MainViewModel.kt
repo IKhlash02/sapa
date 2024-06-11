@@ -21,30 +21,6 @@ class MainViewModel(private val userRepository: UserRepository ): ViewModel() {
         }
     }
 
-     fun updateUserName(name: String) {
-         viewModelScope.launch {
-             userRepository.updateUserName(name)
-         }
-    }
-
-     fun updateUserLevel(level: Int) {
-        viewModelScope.launch {
-            userRepository.updateUserLevel(level)
-        }
-    }
-
-     fun updateUserPoint(point: Int) {
-        viewModelScope.launch {
-            userRepository.updateUserPoint(point)
-        }
-    }
-
-     fun updateUserHeart(heart: Int) {
-        viewModelScope.launch {
-            userRepository.updateUserHeart(heart)
-        }
-    }
-
     fun decreaseHeart() {
         val currentHearts = userData.value.heart
         if (currentHearts > 0) {

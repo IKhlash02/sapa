@@ -57,12 +57,12 @@ fun CameraPreview(imageClassifierHelper: ImageClassifierHelper) {
                     cameraProvider.unbindAll()
                     cameraProvider.bindToLifecycle(
                         lifecycleOwner,
-                        CameraSelector.DEFAULT_BACK_CAMERA,
+                        CameraSelector.DEFAULT_FRONT_CAMERA,
                         preview,
                         imageAnalysis
                     )
                 } catch (exc: Exception) {
-                    Log.e("ExamScreenn", "Binding failed", exc)
+                    Log.e("ExamScreen", "Binding failed", exc)
                 }
             }, executor)
         }

@@ -40,6 +40,7 @@ import com.example.sapa.ui.component.CameraPreview
 import com.example.sapa.ui.screen.question.ProgressBar
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
+import com.example.sapa.ui.theme.nunitoFontFamily
 import com.google.mediapipe.tasks.components.containers.Classifications
 
 @Composable
@@ -97,7 +98,6 @@ fun ExamScreen(
                 text = "5",
                 style = TextStyle(
                     fontSize = 20.sp,
-//                fontFamily = FontFamily(Font(R.font.poppins)),
                     color = Color.White,
                     fontWeight = FontWeight(600),
                 )
@@ -126,7 +126,6 @@ fun ExamScreenPreview() {
 fun QuestionCard(
     modifier: Modifier = Modifier,
     imageClassifierHelper: ImageClassifierHelper
-
 ) {
 
     Card(
@@ -146,8 +145,8 @@ fun QuestionCard(
                 text = "Jawab pertanyaan berikut:",
                 style = TextStyle(
                     fontSize = 24.sp,
-//                    fontFamily = FontFamily(Font(R.font.nunito)),
-                    fontWeight = FontWeight(700),
+                    fontFamily = nunitoFontFamily,
+                    fontWeight = FontWeight.Bold,
                     color = Color(0xFF000000),
                     textAlign = TextAlign.Center,
                 ),

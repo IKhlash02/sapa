@@ -56,7 +56,7 @@ fun IntroScreen(
     {
         Spacer(modifier = Modifier.weight(1f))
         AnimatedPreloader(
-            animatation = R.raw.hand_animation,
+            animation = R.raw.hand_animation,
             modifier = Modifier
                 .width(376.dp)
                 .height(251.dp)
@@ -92,15 +92,6 @@ fun IntroScreen(
             colorText = Color.White
         )
         Spacer(modifier = Modifier.height(10.dp))
-//        OptionButton(
-//            modifier = Modifier.padding(0.dp),
-//            optionText = "SAYA SUDAH PUNYA AKUN",
-//            onClick = {
-//                showBottomSheet = true
-//            },
-//            colorButton = Color.White,
-//            colorText = Color(0xFF219EBC)
-//        )
 
         if (showBottomSheet) {
             ModalBottomSheet(
@@ -110,7 +101,6 @@ fun IntroScreen(
                 },
                 sheetState = sheetState
             ) {
-                // Sheet content
 
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp)

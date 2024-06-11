@@ -45,6 +45,7 @@ fun SapaApp(
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
+        modifier = modifier,
         bottomBar = {
             if (currentRoute == Screen.Home.route || currentRoute == Screen.Profile.route || currentRoute == Screen.Dictionary.route){
                 BottomBar(navController)
@@ -197,10 +198,7 @@ private fun BottomBar(
 @Preview(showBackground = true)
 @Composable
 private fun SapaAppPreview() {
-
-
     SAPATheme {
-
         SapaApp()
     }
 }

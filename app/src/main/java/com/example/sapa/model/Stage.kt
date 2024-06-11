@@ -3,7 +3,7 @@ package com.example.sapa.model
 data class Stage(
     val id: Int,
     val noStage: Int?,
-    var isComplated: Boolean = false
+    var isCompleted: Boolean = false
 )
 
 data class Unit(
@@ -14,7 +14,7 @@ data class Unit(
 )
 
 data class StageDetail(
-    val question_id: Int,
+    val questionId: Int,
     val Image: String,
     val option1: String,
     val option2: String,

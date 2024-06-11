@@ -46,8 +46,8 @@ fun StageItem(
         }
         Image(
             modifier = Modifier
-                .width(82.dp)
-                .height(68.dp),
+                .width(68.dp)
+                .height(58.dp),
             painter = painterResource(
                 id = if (enabled) imageRes else R.drawable.stage_locked
             ),
@@ -66,7 +66,7 @@ fun StageItem(
             )
         } else {
             Image(
-                modifier = Modifier.size(60.dp),
+                modifier = Modifier.size(40.dp),
                 painter = painterResource(id = R.drawable.peti), contentDescription = "stageItem",
             )
         }

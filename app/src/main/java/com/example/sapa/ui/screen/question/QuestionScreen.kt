@@ -65,16 +65,14 @@ fun QuestionScreen(
     modifier: Modifier = Modifier,
     id: Int,
     navigateBack: () -> Unit,
-    navigateFinish: () -> Unit
-) {
-    var currentQuestionIndex by remember { mutableIntStateOf(0) }
-
-    val context = LocalContext.current
-    val viewModel: MainViewModel = viewModel(
+    navigateFinish: () -> Unit,
+    viewModel: MainViewModel = viewModel(
         factory = ViewModelFactory(
-            Injection.provideUserRepository(context)
+            Injection.provideUserRepository(LocalContext.current)
         )
     )
+) {
+    var currentQuestionIndex by remember { mutableIntStateOf(0) }
     val userData = viewModel.userData.collectAsState().value
 
     var progress by remember { mutableFloatStateOf(0F) }
@@ -197,7 +195,11 @@ fun QuestionScreen(
                                 progress += 0.2F
                                 if (progress >= 1F) {
                                     viewModel.increasePoint()
-                                    viewModel.increaseCompleted()
+
+                                    Log.d("questScreen", "$id : ${userData.completed}")
+                                    if (id <= userData.completed) {
+                                        viewModel.increaseCompleted(id + 1)
+                                    }
                                     navigateFinish()
                                 } else {
                                     currentQuestionIndex++
@@ -253,7 +255,7 @@ fun QuestionCard(modifier: Modifier = Modifier, imageUrl: String) {
                 text = "Jawab pertanyaan berikut:",
                 style = TextStyle(
                     fontSize = 24.sp,
-                    fontFamily =  nunitoFontFamily,
+                    fontFamily = nunitoFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF000000),
                     textAlign = TextAlign.Center,

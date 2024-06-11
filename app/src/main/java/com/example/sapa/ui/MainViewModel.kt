@@ -81,12 +81,9 @@ class MainViewModel(private val userRepository: UserRepository ): ViewModel() {
         }
     }
 
-    fun increaseCompleted() {
-        val currentCompleted = userData.value.completed
-
-        val newCompleted = currentCompleted + 1
+    fun increaseCompleted(stage: Int) {
         viewModelScope.launch {
-            userRepository.updateUserCompleted(newCompleted)
+            userRepository.updateUserCompleted(stage)
         }
     }
 

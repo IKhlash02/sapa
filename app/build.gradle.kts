@@ -84,9 +84,9 @@ dependencies {
     implementation (libs.androidx.camera.lifecycle)
 
     //tensorflow
-    implementation(libs.tensorflow.lite.task.vision)
-    implementation(libs.tensorflow.lite.gpu.delegate.plugin)
-    implementation(libs.tensorflow.lite.gpu)
+//    implementation(libs.tensorflow.lite.task.vision)
+//    implementation(libs.tensorflow.lite.gpu.delegate.plugin)
+//    implementation(libs.tensorflow.lite.gpu)
 
     implementation(libs.coil.compose)
 
@@ -98,4 +98,7 @@ dependencies {
 
     //Datastore
     implementation(libs.androidx.datastore.preferences)
+
+
+    implementation("com.google.mediapipe:tasks-vision:0.20230731")
 }

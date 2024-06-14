@@ -48,6 +48,7 @@ import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.theme.SAPATheme
 import com.example.sapa.ui.theme.nunitoFontFamily
+import java.nio.file.WatchEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -127,19 +128,45 @@ fun ProfileScreen(
                         color = Color(0xFF000000),
                     )
                 )
+
+
                 Spacer(modifier = Modifier.height(14.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     CardStat(
-                        title = "72 jam",
-                        description = "Waktu dihabiskan",
+                        title = "${userData.point}",
+                        description = "XP didapat",
                         painter = painterResource(
-                            id = R.drawable.time
-                        )
+                            id = R.drawable.xp
+                        ),
+                        modifier = Modifier.weight(1f)
+
                     )
-                    Spacer(modifier = Modifier.width(13.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
+                    CardStat(
+                        title = "${userData.heart}",
+                        description = "Nyawa tersisa",
+                        painter = painterResource(
+                            id = R.drawable.heart
+                        ),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Spacer(modifier = Modifier.height(14.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+//                    CardStat(
+//                        title = "72 jam",
+//                        description = "Waktu dihabiskan",
+//                        painter = painterResource(
+//                            id = R.drawable.time
+//                        )
+//                    )
+                    Spacer(modifier = Modifier.width(10.dp))
                     CardStat(
                         title = "2",
                         description = "Level dicapai",
@@ -148,39 +175,6 @@ fun ProfileScreen(
                         )
                     )
                 }
-
-                Spacer(modifier = Modifier.height(14.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    CardStat(
-                        title = "${userData.point}",
-                        description = "XP didapat",
-                        painter = painterResource(
-                            id = R.drawable.xp
-                        )
-                    )
-                    Spacer(modifier = Modifier.width(13.dp))
-                    CardStat(
-                        title = "${userData.heart}",
-                        description = "Nyawa tersisa",
-                        painter = painterResource(
-                            id = R.drawable.heart
-                        )
-                    )
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Peringkat Dunia",
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontFamily = nunitoFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF000000),
-                    )
-                )
             }
         }
     }
@@ -198,7 +192,8 @@ private fun ProfileScreenPreview() {
 private fun CardStat(
     title: String,
     description: String,
-    painter: Painter
+    painter: Painter,
+    modifier: Modifier = Modifier
 ) {
     Card(
 
@@ -219,14 +214,14 @@ private fun CardStat(
 
         ) {
         Row(
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 17.dp)
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 17.dp),
         ) {
             Image(
                 painter = painter,
                 contentDescription = "image description",
                 contentScale = ContentScale.None,
                 modifier = Modifier
-                    .padding(0.dp)
+                    .padding(top = 5.dp)
                     .height(17.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -241,7 +236,7 @@ private fun CardStat(
                         fontFamily = nunitoFontFamily,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF000000),
-                    )
+                    ),
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(

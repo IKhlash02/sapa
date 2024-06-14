@@ -26,8 +26,8 @@ fun CameraPreview(imageClassifierHelper: ImageClassifierHelper) {
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
 
     AndroidView(
-        factory = { context ->
-            PreviewView(context).apply {
+        factory = {
+            PreviewView(it).apply {
                 implementationMode = PreviewView.ImplementationMode.COMPATIBLE
             }
         },
@@ -57,7 +57,7 @@ fun CameraPreview(imageClassifierHelper: ImageClassifierHelper) {
                     cameraProvider.unbindAll()
                     cameraProvider.bindToLifecycle(
                         lifecycleOwner,
-                        CameraSelector.DEFAULT_FRONT_CAMERA,
+                        CameraSelector.DEFAULT_BACK_CAMERA,
                         preview,
                         imageAnalysis
                     )

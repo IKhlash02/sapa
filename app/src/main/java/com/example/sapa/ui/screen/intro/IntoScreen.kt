@@ -54,7 +54,7 @@ fun IntroScreen(
 
     )
     {
-
+        Spacer(modifier = Modifier.weight(1f))
         AnimatedPreloader(
             animatation = R.raw.hand_animation,
             modifier = Modifier
@@ -83,7 +83,7 @@ fun IntroScreen(
                 textAlign = TextAlign.Center,
             )
         )
-        Spacer(modifier = Modifier.height(200.dp))
+        Spacer(modifier = Modifier.weight(1f))
         OptionButton(
             modifier = Modifier.padding(0.dp),
             optionText = "MARI MULAI",
@@ -91,16 +91,16 @@ fun IntroScreen(
             colorButton = Color(0xFF219EBC),
             colorText = Color.White
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        OptionButton(
-            modifier = Modifier.padding(0.dp),
-            optionText = "SAYA SUDAH PUNYA AKUN",
-            onClick = {
-                showBottomSheet = true
-            },
-            colorButton = Color.White,
-            colorText = Color(0xFF219EBC)
-        )
+//        Spacer(modifier = Modifier.height(10.dp))
+//        OptionButton(
+//            modifier = Modifier.padding(0.dp),
+//            optionText = "SAYA SUDAH PUNYA AKUN",
+//            onClick = {
+//                showBottomSheet = true
+//            },
+//            colorButton = Color.White,
+//            colorText = Color(0xFF219EBC)
+//        )
 
         if (showBottomSheet) {
             ModalBottomSheet(

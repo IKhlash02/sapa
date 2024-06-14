@@ -6,6 +6,7 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.Surface
 import androidx.camera.core.ImageProxy
+import com.example.sapa.model.Classification
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.common.ops.CastOp
 import org.tensorflow.lite.support.image.ImageProcessor
@@ -13,13 +14,12 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.core.vision.ImageProcessingOptions
-import org.tensorflow.lite.task.vision.classifier.Classifications
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 
 class ImageClassifierHelper(
-    var threshold: Float = 0.1f,
-    var maxResults: Int = 3,
-    val modelName: String = "model1.tflite",
+    var threshold: Float = 0.6f,
+    var maxResults: Int = 1,
+    val modelName: String = "model_metadata1.tflite",
     val context: Context,
     val classifierListener: ClassifierListener?
 ) {
@@ -55,8 +55,8 @@ class ImageClassifierHelper(
         }
 
         val imageProcessor = ImageProcessor.Builder()
-            .add(ResizeOp(224, 224, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
-            .add(CastOp(DataType.UINT8))
+            .add(ResizeOp(28, 28, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
+            .add(CastOp(DataType.FLOAT32))
             .build()
 
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(toBitmap(image)))
@@ -67,9 +67,19 @@ class ImageClassifierHelper(
 
         var inferenceTime = SystemClock.uptimeMillis()
         val results = imageClassifier?.classify(tensorImage, imageProcessingOptions)
+
+        val finalResult =  results?.flatMap {classification ->
+            classification.categories.map { category ->
+                Classification(
+                    name = category.label,
+                    score = category.score
+                )
+            }
+        }?.distinctBy { it.name } ?: emptyList()
+
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
         classifierListener?.onResults(
-            results,
+            finalResult,
             inferenceTime
         )
     }
@@ -97,7 +107,7 @@ class ImageClassifierHelper(
     interface ClassifierListener {
         fun onError(error: String)
         fun onResults(
-            results: List<Classifications>?,
+            results: List<Classification>?,
             inferenceTime: Long
         )
     }

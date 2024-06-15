@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.sapa.di.Injection
-import com.example.sapa.model.DetailData
+import com.example.sapa.model.DictionaryData
 import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.OptionButton
@@ -78,7 +78,9 @@ fun QuestionScreen(
     val userData = viewModel.userData.collectAsState().value
 
     var progress by remember { mutableFloatStateOf(0F) }
-    val questions = DetailData.signLanguageAlphabetQuestions
+    val questions = remember {
+        DictionaryData.generateSignLanguageAlphabetQuestions()
+    }
     val currentQuestion = questions[currentQuestionIndex]
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -197,7 +199,9 @@ fun QuestionScreen(
                                 progress += 0.2F
                                 if (progress >= 1F) {
                                     viewModel.increasePoint()
-                                    viewModel.increaseCompleted()
+                                    if(userData.completed <= id){
+                                        viewModel.updateUserComplete(id+1)
+                                    }
                                     navigateFinish()
                                 } else {
                                     currentQuestionIndex++
@@ -253,7 +257,7 @@ fun QuestionCard(modifier: Modifier = Modifier, imageUrl: String) {
                 text = "Jawab pertanyaan berikut:",
                 style = TextStyle(
                     fontSize = 24.sp,
-                    fontFamily =  nunitoFontFamily,
+                    fontFamily = nunitoFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF000000),
                     textAlign = TextAlign.Center,

@@ -20,18 +20,25 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -40,32 +47,54 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.example.sapa.helper.ImageClassifierHelper
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sapa.di.Injection
 import com.example.sapa.model.Classification
+import com.example.sapa.ui.MainViewModel
+import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.Camera.CameraPreview1
 import com.example.sapa.ui.component.Camera.SignImageAnalyzer
 import com.example.sapa.ui.component.Camera.TfLiteSignClassifier
-import com.example.sapa.ui.component.CameraPreview
+import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.screen.question.ProgressBar
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
 import com.example.sapa.ui.theme.nunitoFontFamily
-import org.tensorflow.lite.task.vision.classifier.Classifications
+import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamScreen(
     modifier: Modifier = Modifier,
-    navigateBack: () -> Unit
+    id: Int,
+    navigateBack: () -> Unit,
+    navigateFinish: () -> Unit,
+    viewModel: MainViewModel = viewModel(
+        factory = ViewModelFactory(
+            Injection.provideUserRepository(LocalContext.current)
+        )
+    )
 ) {
+
+    val userData = viewModel.userData.collectAsState().value
 
     var classification by remember {
         mutableStateOf(emptyList<Classification>())
     }
 
-    val progress by remember {
-        mutableIntStateOf(0)
+    var progress by remember {
+        mutableFloatStateOf(0f)
     }
+    val letters = remember { ('A'..'N').toList() }
+    val randomLetters = remember { letters.shuffled().take(5) }
+
+    var currentQuestionIndex by remember { mutableIntStateOf(0) }
+    val currentQuestion = randomLetters[currentQuestionIndex]
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
 
     val analyzer = remember {
@@ -89,21 +118,6 @@ fun ExamScreen(
             )
         }
     }
-
-    val imageClassifierHelper = remember {
-        ImageClassifierHelper(context = context, classifierListener = object :
-            ImageClassifierHelper.ClassifierListener {
-            override fun onError(error: String) {
-
-            }
-
-            override fun onResults(results: List<Classification>?, inferenceTime: Long) {
-               classification = results ?: emptyList()
-            }
-
-        })
-    }
-
     Column(
         modifier = modifier
             .background(color = PacificBlue2)
@@ -127,7 +141,7 @@ fun ExamScreen(
                     )
                 },
             )
-            ProgressBar(progress = progress.toFloat(), modifier.weight(1F))
+            ProgressBar(progress = progress, modifier.weight(1F))
             Spacer(modifier = Modifier.width(10.dp))
             Icon(imageVector = Icons.Filled.Favorite, contentDescription = null, tint = Color.Red)
             Spacer(modifier = Modifier.width(5.dp))
@@ -143,11 +157,68 @@ fun ExamScreen(
         Spacer(modifier = Modifier.height(10.dp))
         QuestionCard(
             modifier = Modifier.weight(1F),
-            imageClassifierHelper,
             classification,
-            controller
+            controller,
+            currentQuestion,
+            showBottomSheet = { showBottomSheet = it }
         )
         Spacer(modifier = Modifier.height(70.dp))
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                shape = RectangleShape,
+                containerColor = Color(0xFFD7FFB8),
+                onDismissRequest = {
+                    showBottomSheet = false
+                },
+                sheetState = sheetState
+            ) {
+                // Sheet content
+
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = "Benar",
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontFamily = nunitoFontFamily,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color(0xFF58A700),
+                            textAlign = TextAlign.Center,
+                        )
+                    )
+
+                    Spacer(Modifier.height(10.dp))
+                    OptionButton(
+                        modifier = Modifier.padding(bottom = 30.dp),
+                        optionText = "Lanjutkan", onClick = {
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    showBottomSheet = false
+                                }
+                            }
+                            progress += 0.2F
+                            if (progress >= 1F) {
+                                viewModel.increasePoint()
+                                if (userData.completed <= id){
+                                    viewModel.updateUserComplete(id+1)
+                                    viewModel.updateUserLevel(id/4)
+                                }
+                                navigateFinish()
+                            } else {
+                                currentQuestionIndex++
+                            }
+
+                        },
+                        colorButton = Color(0xFF58CC02),
+                        colorText = Color(0xFFFFFFFF)
+                    )
+
+                }
+
+            }
+        }
 
     }
 
@@ -159,16 +230,17 @@ fun ExamScreen(
 fun ExamScreenPreview() {
     SAPATheme {
 
-        ExamScreen(navigateBack = {})
+        ExamScreen(navigateBack = {}, navigateFinish = {}, id =1)
     }
 }
 
 @Composable
 fun QuestionCard(
     modifier: Modifier = Modifier,
-    imageClassifierHelper: ImageClassifierHelper,
     classifications: List<Classification>,
     controller: LifecycleCameraController,
+    currentQuestion: Char,
+    showBottomSheet: (Boolean) -> Unit
 
 ) {
     Card(
@@ -199,7 +271,7 @@ fun QuestionCard(
                         )
                     )
                     Text(
-                        text = "A",
+                        text = "$currentQuestion",
                         style = TextStyle(
                             fontSize = 40.sp,
                             fontFamily = nunitoFontFamily,
@@ -223,7 +295,7 @@ fun QuestionCard(
                             textAlign = TextAlign.Center,
                         )
                     )
-                    classifications.forEach{
+                    classifications.forEach {
                         Text(
                             text = it.name,
                             style = TextStyle(
@@ -234,14 +306,14 @@ fun QuestionCard(
                                 textAlign = TextAlign.Center,
                             )
                         )
+                        if (currentQuestion.toString() == it.name) {
+                            showBottomSheet(true)
+                        }
                     }
 
                 }
             }
             CameraPreview1(controller = controller, modifier = Modifier.fillMaxSize())
-//            CameraPreview(
-//                imageClassifierHelper
-//            )
         }
     }
 }

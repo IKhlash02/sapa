@@ -8,10 +8,10 @@ object UnitData {
             namaTopik = "Abjad A-N",
             unitNo = 1,
             stages = listOf(
-                Stage(id = 1, noStage = 1),  // A - D (PG)
-                Stage(id = 2, noStage = 2),  // E - I (PG)
-                Stage(id = 3, noStage = 3),  // J - N (PG)
-                Stage(id = 4, noStage = null)   // Kuis A - N (VIDEO)
+                Stage(id = 1, idDetail = 1),  // A - D (PG)
+                Stage(id = 2, idDetail = 2),  // E - I (PG)
+                Stage(id = 3, idDetail = 3),  // J - N (PG)
+                Stage(id = 4, isExam = true,  idDetail = 1)  // Kuis A - N (VIDEO)
             )
         ),
         Unit(
@@ -19,10 +19,10 @@ object UnitData {
             namaTopik = "Abjad O - Z",
             unitNo = 2,
             stages = listOf(
-                Stage(id = 5, noStage = 4),  // O - R (PG)
-                Stage(id = 6, noStage = 5),  // S - V (PG)
-                Stage(id = 7, noStage = 6),  // W - Z (PG)
-                Stage(id = 8, noStage = null)   // Kuis O - Z (VIDEO)
+                Stage(id = 5,  idDetail = 4),  // O - R (PG)
+                Stage(id = 6, idDetail = 5),  // S - V (PG)
+                Stage(id = 7, idDetail = 6),  // W - Z (PG)
+                Stage(id = 8, isExam = true,  idDetail = 2)   // Kuis O - Z (VIDEO)
             )
         ),
         Unit(
@@ -30,35 +30,12 @@ object UnitData {
             namaTopik = "Angka 0 - 9",
             unitNo = 3,
             stages = listOf(
-                Stage(id = 9, noStage = 7),  // 0 - 4
-                Stage(id = 10, noStage = 8),
-                Stage(id = 11, noStage = 9),// 5 - 9
-                Stage(id = 12, noStage = null)  // Kuis 0 - 9
+                Stage(id = 9, idDetail = 7),  // 0 - 4
+                Stage(id = 10, idDetail = 8),
+                Stage(id = 11, idDetail = 9),// 5 - 9
+                Stage(id = 12, isExam = true, idDetail = 3)  // Kuis 0 - 9
             )
         ),
 
-        // Level Menengah
-//        Unit(
-//            id = 4,
-//            namaTopik = "Kata ganti orang",
-//            unitNo = 4,
-//            stages = listOf(
-//                Stage(id = 12, noStage = 1), // aku, saya
-//                Stage(id = 13, noStage = 2), // kamu, dia
-//                Stage(id = 14, noStage = null)  // Kuis semuanya
-//            )
-//        ),
-//        Unit(
-//            id = 5,
-//            namaTopik = "Bertanya?",
-//            unitNo = 5,
-//            stages = listOf(
-//                Stage(id = 15, noStage = 1), // Apa, siapa, kenapa
-//                Stage(id = 16, noStage = 2), // kapan, di mana, bagaimana
-//                Stage(id = 17, noStage = null)  // Kuis semuanya
-//            )
-//        )
-    )
-
-
+        )
 }

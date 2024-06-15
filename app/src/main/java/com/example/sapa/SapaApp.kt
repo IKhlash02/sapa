@@ -86,8 +86,13 @@ fun SapaApp(
                        })
                } else{
                    ExamScreen(
+                       id = id,
                        navigateBack = {
                            navController.navigateUp()
+                       },
+                       navigateFinish = {
+                           navController.popBackStack()
+                           navController.navigate(Screen.Congratulation.route)
                        }
                    )
                }

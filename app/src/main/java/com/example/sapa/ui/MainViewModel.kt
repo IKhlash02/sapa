@@ -45,6 +45,12 @@ class MainViewModel(private val userRepository: UserRepository ): ViewModel() {
         }
     }
 
+    fun updateUserComplete(completed: Int) {
+        viewModelScope.launch {
+            userRepository.updateUserCompleted(completed)
+        }
+    }
+
     fun decreaseHeart() {
         val currentHearts = userData.value.heart
         if (currentHearts > 0) {

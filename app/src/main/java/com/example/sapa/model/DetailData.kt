@@ -4,7 +4,7 @@ object DetailData {
     val signLanguageAlphabetQuestions = listOf(
         StageDetail(
             question_id = 1,
-            Image = "https://i.pinimg.com/564x/6f/12/ab/6f12ab6f7f4d062047429112406ca47f.jpg",
+            Image = "https://storage.googleapis.com/db-capstone-migrate/dictionary/a.png",
             option1 = "B",
             option2 = "A",
             option3 = "C",

@@ -30,10 +30,11 @@ import com.example.sapa.ui.theme.nunitoFontFamily
 fun StageItem(
     modifier: Modifier = Modifier,
     enabled: Boolean,
-    stage: Int? = null,
-    unitId: Int = 1
-
+    isExam: Boolean = false,
+    unitId: Int = 1,
+    stage: Int?
     ) {
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -53,7 +54,7 @@ fun StageItem(
             ),
             contentDescription = "stageItem",
         )
-        if (stage != null) {
+        if (!isExam) {
             Text(
                 text = "$stage",
                 style = TextStyle(
@@ -73,67 +74,11 @@ fun StageItem(
     }
 }
 
-
-@Composable
-fun StageItem1(
-    modifier: Modifier = Modifier,
-    stage: Int? = null,
-
-    ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-
-        ElevatedButton(
-            modifier = Modifier
-                .width(68.dp)
-                .height(68.dp)
-                .clip(CircleShape)
-                .shadow(
-                    elevation = 1000.dp,
-                    shape = CircleShape,
-                    ambientColor = Color.Gray,
-                    spotColor = Color.Black
-                ),
-            onClick = {},
-            colors = ButtonDefaults.buttonColors(
-                PacificBlue2
-            ),
-            elevation = ButtonDefaults.elevatedButtonElevation(
-                defaultElevation = 10.dp
-
-            )
-        ) {
-            if (stage != null) {
-                Text(
-                    text = "$stage",
-                    style = TextStyle(
-                        fontSize = 40.sp,
-//                fontFamily = FontFamily(Font(R.font.amaranth)),
-                        fontWeight = FontWeight(700),
-                        color = Color(0xFFFFFFFF),
-
-                        )
-                )
-            } else {
-                Image(
-                    modifier = Modifier.size(60.dp),
-                    painter = painterResource(id = R.drawable.peti),
-                    contentDescription = "stageItem",
-                )
-            }
-        }
-
-    }
-}
-
-
 @Preview(showBackground = true)
 @Composable
 fun StageItemPreview() {
     SAPATheme {
-        StageItem(enabled = true)
+        StageItem(enabled = true, isExam = true, stage = null )
 //        StageItem1()
     }
 }

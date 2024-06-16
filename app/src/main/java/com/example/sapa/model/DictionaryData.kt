@@ -1,7 +1,7 @@
 package com.example.sapa.model
 
 object DictionaryData {
-    val baseUrl = "https://storage.googleapis.com/db-capstone-migrate/dictionary/"
+    val baseUrl = "https://storage.googleapis.com/sapa-apps-capstone/dictionary/"
 
     // List of letters from a to z
     val letters = ('a'..'z')

@@ -2,13 +2,16 @@ package com.example.sapa.model
 
 data class Stage(
     val id: Int,
-    val isExam: Boolean = false,
+    val name: String,
     var isComplated: Boolean = false,
-    val idDetail: Int? = null,
-    val space: Int = 0
 )
 
-data class Unit(
+data class Stage1(
+    val stageId: Int,
+    val name: String,
+)
+
+data class UnitModel(
     val id: Int,
     val unitNo: Int,
     val namaTopik: String,

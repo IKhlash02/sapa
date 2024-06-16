@@ -83,10 +83,15 @@ dependencies {
 
     //tensorflow
     implementation(libs.tensorflow.lite.task.vision)
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
+    implementation("org.tensorflow:tensorflow-lite-metadata:0.4.4")
+
+
     implementation(libs.coil.compose)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     //Datastore
     implementation(libs.androidx.datastore.preferences)
+
 }

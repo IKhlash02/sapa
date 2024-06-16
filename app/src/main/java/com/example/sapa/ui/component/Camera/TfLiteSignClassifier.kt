@@ -33,7 +33,7 @@ class TfLiteSignClassifier(
         try {
             classifier = ImageClassifier.createFromFileAndOptions(
                 context,
-                "model_metadata1.tflite",
+                "model1_3.tflite",
                 options
             )
         } catch (e: IllegalStateException){

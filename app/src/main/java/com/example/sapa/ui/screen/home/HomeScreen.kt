@@ -41,35 +41,68 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sapa.R
 import com.example.sapa.data.pref.UserModel
 import com.example.sapa.di.Injection
-import com.example.sapa.model.UnitData
+import com.example.sapa.model.UnitModel
 import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.ButtonComponent2
 import com.example.sapa.ui.component.StageItem
 import com.example.sapa.ui.component.UnitItem
+import com.example.sapa.ui.screen.StageViewModelFactory
+import com.example.sapa.ui.screen.common.UiState
 import com.example.sapa.ui.theme.PacificBlue
 import com.example.sapa.ui.theme.SAPATheme
 import com.example.sapa.ui.theme.nunitoFontFamily
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToQuestion: (Int) -> Unit,
+    homeViewModel: HomeViewModel = viewModel(
+        factory = StageViewModelFactory(Injection.provideStageRepository())
+    )
 
-    ) {
+) {
+    homeViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        when (uiState) {
+            is UiState.Loading -> {
+                homeViewModel.getAllStages()
+            }
+
+            is UiState.Success -> {
+                Log.d("stages", "data: ${uiState.data}")
+                HomeContent(
+                    modifier = modifier,
+                    navigateToQuestion = navigateToQuestion,
+                    stages = uiState.data
+                )
+            }
+
+            is UiState.Error -> {}
+        }
+
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeContent(
+    modifier: Modifier = Modifier,
+    navigateToQuestion: (Int) -> Unit,
+    stages: List<UnitModel>,
+    viewModel: MainViewModel = viewModel(
+        factory = ViewModelFactory(
+            Injection.provideUserRepository(LocalContext.current)
+        )
+    )
+
+) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
-
-    val viewModel: MainViewModel = viewModel(
-        factory = ViewModelFactory(
-            Injection.provideUserRepository(context)
-        )
-    )
     val userData = viewModel.userData.collectAsState().value
     Log.d("HomeScreen", "data: ${viewModel.userData.collectAsState().value}")
 
@@ -89,7 +122,7 @@ fun HomeScreen(
         LazyColumn(
             modifier.padding(innerPadding)
         ) {
-            items(UnitData.units) { item ->
+            items(stages) { item ->
                 UnitItem(
                     noUnit = item.unitNo,
                     namaTopik = item.namaTopik,
@@ -105,8 +138,7 @@ fun HomeScreen(
                         StageItem(
                             unitId = item.id,
                             enabled = stage.id <= userData.completed,
-                            stage = stage.idDetail,
-                            isExam = stage.isExam,
+                            stage = stage.name,
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .clickable(enabled = stage.id <= userData.completed) {
@@ -251,6 +283,8 @@ private fun TopBar(
 
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable

@@ -34,6 +34,7 @@ import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.AnimatedPreloader
 import com.example.sapa.ui.component.OptionButton
+import com.example.sapa.ui.component.SoundPlayer
 import com.example.sapa.ui.theme.SAPATheme
 import com.example.sapa.ui.theme.nunitoFontFamily
 
@@ -52,7 +53,7 @@ fun CongratulationScreen(
     )
     val userData = viewModel.userData.collectAsState().value
 
-
+    SoundPlayer(soundResId = R.raw.victory)
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

@@ -48,7 +48,7 @@ fun IntroScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier.fillMaxSize().padding(horizontal = 27.dp),
+        modifier = modifier.fillMaxSize().padding(horizontal = 27.dp, vertical = 30.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 

@@ -6,6 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,13 +44,19 @@ fun DictionaryScreen(
     ) {
 
         val painter = rememberAsyncImagePainter(dictionary[currentIndex])
-        Image(
-            painter = painter,
-            contentDescription = null,
-            modifier = Modifier.size(400.dp),
-            contentScale = ContentScale.Crop
-        )
+        ElevatedCard(
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 5.dp
+            )
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier.size(400.dp),
+                contentScale = ContentScale.Crop
+            )
 
+        }
     }
 }
 

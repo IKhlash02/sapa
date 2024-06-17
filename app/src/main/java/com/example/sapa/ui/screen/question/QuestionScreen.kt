@@ -51,19 +51,60 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.sapa.di.Injection
 import com.example.sapa.model.DictionaryData
+import com.example.sapa.model.StageDetail
 import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.OptionButton
+import com.example.sapa.ui.screen.StageViewModelFactory
+import com.example.sapa.ui.screen.common.UiState
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
 import com.example.sapa.ui.theme.nunitoFontFamily
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun QuestionScreen(
+    id: Int,
+    modifier: Modifier = Modifier,
+    navigateBack: () -> Unit,
+    navigateFinish: () -> Unit,
+    QuestionViewModel: QuestionViewModel = viewModel(
+        factory = StageViewModelFactory(Injection.provideStageRepository())
+    )
+
+) {
+    QuestionViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        when (uiState) {
+            is UiState.Loading -> {
+                QuestionViewModel.getDetailStages()
+            }
+
+            is UiState.Success -> {
+                Log.d("stages", "data: ${uiState.data}")
+                QuestionContent(
+                    id = id,
+                    modifier = modifier,
+                    navigateBack = navigateBack,
+                    questions = uiState.data,
+                    navigateFinish = navigateFinish
+                )
+            }
+
+            is UiState.Error -> {}
+        }
+
+    }
+
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun QuestionContent(
     modifier: Modifier = Modifier,
     id: Int,
+    questions : List<StageDetail>,
     navigateBack: () -> Unit,
     navigateFinish: () -> Unit
 ) {
@@ -78,9 +119,6 @@ fun QuestionScreen(
     val userData = viewModel.userData.collectAsState().value
 
     var progress by remember { mutableFloatStateOf(0F) }
-    val questions = remember {
-        DictionaryData.generateSignLanguageAlphabetQuestions()
-    }
     val currentQuestion = questions[currentQuestionIndex]
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -155,6 +193,7 @@ fun QuestionScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         if (showBottomSheet) {
+
             ModalBottomSheet(
                 shape = RectangleShape,
                 containerColor = if (isAnswerCorrect) Color(0xFFD7FFB8) else Color(0xFFFFDFE0),
@@ -189,18 +228,18 @@ fun QuestionScreen(
                                 }
                             }
 
-                            if (!isAnswerCorrect) {
+                            if(!isAnswerCorrect){
                                 viewModel.decreaseHeart()
                             }
 
                             if (userData.heart == 0 && !isAnswerCorrect) {
                                 navigateBack()
                             } else {
-                                progress += 0.2F
+                                progress += 1F/questions.size
                                 if (progress >= 1F) {
                                     viewModel.increasePoint()
-                                    if(userData.completed <= id){
-                                        viewModel.updateUserComplete(id+1)
+                                    if (userData.completed <= id) {
+                                        viewModel.updateUserComplete(id + 1)
                                     }
                                     navigateFinish()
                                 } else {

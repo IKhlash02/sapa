@@ -1,7 +1,9 @@
 package com.example.sapa.data
 import android.util.Log
+import com.example.sapa.model.DictionaryData
 import com.example.sapa.model.FakeAllStage
 import com.example.sapa.model.Stage
+import com.example.sapa.model.StageDetail
 import com.example.sapa.model.UnitModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -29,6 +31,10 @@ class StageRepository {
 
     fun getAllStage(): Flow<List<UnitModel>> {
         return flowOf(listStage)
+    }
+
+    fun getDetailStage(): Flow<List<StageDetail>>{
+        return  flowOf(DictionaryData.generateSignLanguageAlphabetQuestions())
     }
 
     companion object {

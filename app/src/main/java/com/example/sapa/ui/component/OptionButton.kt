@@ -24,6 +24,9 @@ fun OptionButton(
     colorText: Color = Color.Black
 ) {
     ElevatedButton(
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 5.dp
+        ),
         colors = ButtonDefaults.buttonColors(
             colorButton
         ),

@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -107,6 +108,8 @@ fun HomeContent(
     Log.d("HomeScreen", "data: ${viewModel.userData.collectAsState().value}")
 
 
+
+    val widthSize = listOf(50, 100 , 150 , 200 )
     Scaffold(
         topBar = {
             TopBar(
@@ -117,22 +120,24 @@ fun HomeContent(
             )
         }
     ) { innerPadding ->
-        var stageOffsetWeight = 1f
-        var boolean = true
+
         LazyColumn(
             modifier.padding(innerPadding)
         ) {
-            items(stages) { item ->
+
+
+            itemsIndexed(stages) { index, item ->
                 UnitItem(
                     noUnit = item.unitNo,
                     namaTopik = item.namaTopik,
                     enabled = true
                 )
-                item.stages.forEach { stage ->
+                item.stages.forEachIndexed { indexStage, stage ->
+                    Log.d("index1", "${index + indexStage}")
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = (stageOffsetWeight * 47).dp)
+                            .padding(start = widthSize[(indexStage) % 4].dp)
                     ) {
                         Log.d("HomeScreen1", "${stage.id} : ${item.id}")
                         StageItem(
@@ -147,14 +152,8 @@ fun HomeContent(
                         )
 
                     }
-                    if (boolean) {
-                        stageOffsetWeight += 1f
-                    } else {
-                        stageOffsetWeight -= 1f
-                    }
 
                 }
-                boolean = !boolean
                 Spacer(modifier = modifier.height(20.dp))
             }
         }
@@ -283,7 +282,6 @@ private fun TopBar(
 
     }
 }
-
 
 
 @Preview(showBackground = true)

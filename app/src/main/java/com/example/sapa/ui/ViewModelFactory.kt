@@ -25,6 +25,7 @@ class ViewModelFactory(private val repository: UserRepository) :
                 synchronized(ViewModelFactory::class.java) {
                     INSTANCE = ViewModelFactory(com.example.sapa.di.Injection.provideUserRepository(context),)
                 }
+
             }
             return INSTANCE as ViewModelFactory
         }

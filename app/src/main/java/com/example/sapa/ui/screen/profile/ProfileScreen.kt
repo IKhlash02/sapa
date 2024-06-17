@@ -99,7 +99,7 @@ fun ProfileScreen(
                         .width(103.dp)
                         .height(103.dp)
                         .clip(CircleShape),
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = "image description",
                     contentScale = ContentScale.Crop
                 )

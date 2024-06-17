@@ -37,6 +37,9 @@ fun IconButton(
         colors = ButtonDefaults.buttonColors(
             colorButton
         ),
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 5.dp
+        ),
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()

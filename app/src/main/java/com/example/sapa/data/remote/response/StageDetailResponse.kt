@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class StageDetailResponse(
 
 	@field:SerializedName("data")
-	val data: Data? = null,
+	val data: Data,
 
 	@field:SerializedName("message")
 	val message: String? = null
@@ -26,7 +26,7 @@ data class Data(
 	val stage: Stage? = null,
 
 	@field:SerializedName("questions")
-	val questions: List<QuestionsItem?>? = null
+	val questions: List<QuestionsItem>
 )
 
 data class QuestionsItem(

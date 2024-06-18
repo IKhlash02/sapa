@@ -22,12 +22,9 @@ class HomeViewModel(
     fun getAllStages() {
         viewModelScope.launch {
             repository.getAllStage()
-                .catch {
-                    _uiState.value = UiState.Error(it.message.toString())
-                }
                 .collect { stages ->
                     Log.d("stages", " viewMode: $stages")
-                    _uiState.value = UiState.Success(stages)
+                    _uiState.value = stages
                 }
         }
     }

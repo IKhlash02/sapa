@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -46,6 +45,7 @@ import com.example.sapa.model.UnitModel
 import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
 import com.example.sapa.ui.component.ButtonComponent2
+import com.example.sapa.ui.component.LoadingComponent
 import com.example.sapa.ui.component.StageItem
 import com.example.sapa.ui.component.UnitItem
 import com.example.sapa.ui.screen.StageViewModelFactory
@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navigateToQuestion: (Int) -> Unit,
+    navigateToQuestion: (Int, String) -> Unit,
     homeViewModel: HomeViewModel = viewModel(
         factory = StageViewModelFactory(Injection.provideStageRepository())
     )
@@ -68,6 +68,7 @@ fun HomeScreen(
     homeViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
+                LoadingComponent()
                 homeViewModel.getAllStages()
             }
 
@@ -91,7 +92,7 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    navigateToQuestion: (Int) -> Unit,
+    navigateToQuestion: (Int, String) -> Unit,
     stages: List<UnitModel>,
     viewModel: MainViewModel = viewModel(
         factory = ViewModelFactory(
@@ -139,15 +140,15 @@ fun HomeContent(
                             .fillMaxWidth()
                             .padding(start = widthSize[(indexStage) % 4].dp)
                     ) {
-                        Log.d("HomeScreen1", "${stage.id} : ${item.id}")
+                        Log.d("HomeScreen1", "${stage.stageId} : ${item.id}")
                         StageItem(
                             unitId = item.id,
-                            enabled = stage.id <= userData.completed,
+                            enabled = stage.stageId <= userData.completed,
                             stage = stage.name,
                             modifier = Modifier
                                 .padding(top = 20.dp)
-                                .clickable(enabled = stage.id <= userData.completed) {
-                                    navigateToQuestion(stage.id)
+                                .clickable(enabled = stage.stageId <= userData.completed) {
+                                    navigateToQuestion(stage.stageId, stage.name)
                                 }
                         )
 
@@ -288,6 +289,8 @@ private fun TopBar(
 @Composable
 private fun HomeScreenPreview() {
     SAPATheme {
-        HomeScreen(navigateToQuestion = {})
+        HomeScreen(navigateToQuestion = {id, name ->
+
+        })
     }
 }

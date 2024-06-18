@@ -46,7 +46,7 @@ fun SapaApp(
 
     Scaffold(
         bottomBar = {
-            if (currentRoute == Screen.Home.route || currentRoute == Screen.Profile.route || currentRoute == Screen.Dictionary.route){
+            if (currentRoute == Screen.Home.route || currentRoute == Screen.Profile.route || currentRoute == Screen.Dictionary.route) {
                 BottomBar(navController)
             }
         }
@@ -58,8 +58,8 @@ fun SapaApp(
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
-                    navigateToQuestion = {
-                        navController.navigate(Screen.Question.createRoute(it))
+                    navigateToQuestion = {id, name ->
+                        navController.navigate(Screen.Question.createRoute(id, name))
                     }
                 )
             }
@@ -71,40 +71,44 @@ fun SapaApp(
             }
             composable(
                 route = Screen.Question.route,
-                arguments = listOf(navArgument("id") { type = NavType.IntType }),
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType },
+                    navArgument("name") { type = NavType.StringType }
+                )
             ) {
                 val id = it.arguments?.getInt("id") ?: 0
-               if(id%4 != 0){
-                   QuestionScreen(
-                       id = id,
-                       navigateBack = {
-                           navController.navigateUp()
-                       },
-                       navigateFinish = {
-                           navController.popBackStack()
-                           navController.navigate(Screen.Congratulation.route)
-                       })
-               } else{
-                   ExamScreen(
-                       id = id,
-                       navigateBack = {
-                           navController.navigateUp()
-                       },
-                       navigateFinish = {
-                           navController.popBackStack()
-                           navController.navigate(Screen.Congratulation.route)
-                       }
-                   )
-               }
+                val name = it.arguments?.getString("name") ?: ""
+                if (name.contains("stage")) {
+                    QuestionScreen(
+                        id = id,
+                        navigateBack = {
+                            navController.navigateUp()
+                        },
+                        navigateFinish = {
+                            navController.popBackStack()
+                            navController.navigate(Screen.Congratulation.route)
+                        })
+                } else {
+                    ExamScreen(
+                        id = id,
+                        navigateBack = {
+                            navController.navigateUp()
+                        },
+                        navigateFinish = {
+                            navController.popBackStack()
+                            navController.navigate(Screen.Congratulation.route)
+                        }
+                    )
+                }
             }
 
             composable(
                 route = Screen.Congratulation.route,
-            ){
+            ) {
                 CongratulationScreen(
                     navigateBack = {
                         navController.popBackStack()
-                        navController.navigate(Screen.Home.route){
+                        navController.navigate(Screen.Home.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
@@ -117,11 +121,11 @@ fun SapaApp(
 
             composable(
                 route = Screen.Intro.route
-            ){
-                IntroScreen (
+            ) {
+                IntroScreen(
                     navigateHome = {
                         navController.popBackStack()
-                        navController.navigate(Screen.Home.route){
+                        navController.navigate(Screen.Home.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }

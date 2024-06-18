@@ -1,20 +1,25 @@
 package com.example.sapa.data
+
 import android.util.Log
-import com.example.sapa.model.DictionaryData
-import com.example.sapa.model.FakeAllStage
-import com.example.sapa.model.Stage
-import com.example.sapa.model.StageDetail
+import com.example.sapa.data.remote.response.QuestionsItem
+import com.example.sapa.data.remote.retrofit.ApiService
+
 import com.example.sapa.model.UnitModel
+import com.example.sapa.ui.screen.common.UiState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 
-class StageRepository {
-    private var listStage = mutableListOf<UnitModel>()
-
-    init {
-        if (listStage.isEmpty()) {
-            val stages = FakeAllStage.dumyStages.map { Stage(it.stageId, it.name) }
-            listStage = stages.chunked(4).mapIndexed { index, chunk ->
+class StageRepository(
+    private val apiService: ApiService,
+) {
+    fun getAllStage(): Flow<UiState<List<UnitModel>>> = flow {
+        emit(UiState.Loading)
+        Log.d("stageApi", "start")
+        try {
+            Log.d("stageApi", "start api")
+            val response = apiService.getAllRestaurant()
+            val stages = response.data
+            val newList = stages.chunked(4).mapIndexed { index, chunk ->
                 UnitModel(
                     id = index + 1,
                     unitNo = index + 1,
@@ -23,26 +28,37 @@ class StageRepository {
                 )
             }.toMutableList()
 
-            Log.d("stages", " repository: $listStage")
+            Log.d("stageApi", "$newList")
+            emit(UiState.Success(newList))
+        } catch (e: Exception) {
+            Log.d("stageApi", "error: $e")
+            emit(UiState.Error(e.message.toString()))
+        }
+    }
+
+    fun getDetailStage(id: Int): Flow<UiState<List<QuestionsItem>>> = flow {
+        emit(UiState.Loading)
+        Log.d("stageApi", "start detail")
+        try {
+            Log.d("stageApi", "start api detail")
+            val response = apiService.getDetailRestaurant(id)
+            val questions = response.data.questions
+            emit(UiState.Success(questions))
+        } catch (e: Exception) {
+            Log.d("stageApi", "error: $e")
+            emit(UiState.Error(e.message.toString()))
         }
 
-
-    }
-
-    fun getAllStage(): Flow<List<UnitModel>> {
-        return flowOf(listStage)
-    }
-
-    fun getDetailStage(): Flow<List<StageDetail>>{
-        return  flowOf(DictionaryData.generateSignLanguageAlphabetQuestions())
     }
 
     companion object {
         @Volatile
         private var instance: StageRepository? = null
-        fun getInstance(): StageRepository =
+        fun getInstance(
+            apiService: ApiService
+        ): StageRepository =
             instance ?: synchronized(this) {
-                instance ?: StageRepository()
+                instance ?: StageRepository(apiService)
             }.also { instance = it }
     }
 }

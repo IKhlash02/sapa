@@ -49,11 +49,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import com.example.sapa.data.remote.response.QuestionsItem
 import com.example.sapa.di.Injection
-import com.example.sapa.model.DictionaryData
-import com.example.sapa.model.StageDetail
 import com.example.sapa.ui.MainViewModel
 import com.example.sapa.ui.ViewModelFactory
+import com.example.sapa.ui.component.LoadingComponent
 import com.example.sapa.ui.component.OptionButton
 import com.example.sapa.ui.screen.StageViewModelFactory
 import com.example.sapa.ui.screen.common.UiState
@@ -69,15 +69,16 @@ fun QuestionScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
     navigateFinish: () -> Unit,
-    QuestionViewModel: QuestionViewModel = viewModel(
+    questionViewModel: QuestionViewModel = viewModel(
         factory = StageViewModelFactory(Injection.provideStageRepository())
     )
 
 ) {
-    QuestionViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+    questionViewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
-                QuestionViewModel.getDetailStages()
+                LoadingComponent()
+                questionViewModel.getDetailStages(id)
             }
 
             is UiState.Success -> {
@@ -104,7 +105,7 @@ fun QuestionScreen(
 fun QuestionContent(
     modifier: Modifier = Modifier,
     id: Int,
-    questions : List<StageDetail>,
+    questions : List<QuestionsItem>,
     navigateBack: () -> Unit,
     navigateFinish: () -> Unit
 ) {
@@ -120,7 +121,8 @@ fun QuestionContent(
 
     var progress by remember { mutableFloatStateOf(0F) }
     val currentQuestion = questions[currentQuestionIndex]
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(
+    )
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     var isAnswerCorrect by remember { mutableStateOf(true) }
@@ -167,24 +169,24 @@ fun QuestionContent(
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
-        QuestionCard(modifier = Modifier.weight(1f), imageUrl = currentQuestion.Image)
+        QuestionCard(modifier = Modifier.weight(1f), imageUrl = currentQuestion.link ?: "")
         Spacer(modifier = Modifier.height(16.dp))
 
 
-        OptionButton(currentQuestion.option1, onClick = {
+        OptionButton(currentQuestion.option1 ?: "", onClick = {
             showBottomSheet = true
             isAnswerCorrect = currentQuestion.answer == currentQuestion.option1
         }
         )
-        OptionButton(currentQuestion.option2, onClick = {
+        OptionButton(currentQuestion.option2 ?: "", onClick = {
             showBottomSheet = true
             isAnswerCorrect = currentQuestion.answer == currentQuestion.option2
         })
-        OptionButton(currentQuestion.option3, onClick = {
+        OptionButton(currentQuestion.option3 ?: "", onClick = {
             showBottomSheet = true
             isAnswerCorrect = currentQuestion.answer == currentQuestion.option3
         })
-        OptionButton(currentQuestion.option4, onClick = {
+        OptionButton(currentQuestion.option4 ?: "", onClick = {
             showBottomSheet = true
             isAnswerCorrect = currentQuestion.answer == currentQuestion.option4
         })

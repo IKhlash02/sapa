@@ -5,6 +5,7 @@ import com.example.sapa.data.StageRepository
 import com.example.sapa.data.UserRepository
 import com.example.sapa.data.pref.UserPreference
 import com.example.sapa.data.pref.dataStore
+import com.example.sapa.data.remote.retrofit.ApiConfig
 
 object Injection {
 
@@ -14,6 +15,7 @@ object Injection {
     }
 
     fun provideStageRepository(): StageRepository {
-        return StageRepository.getInstance()
+        val apiService = ApiConfig.getApiService()
+        return StageRepository.getInstance(apiService)
     }
 }

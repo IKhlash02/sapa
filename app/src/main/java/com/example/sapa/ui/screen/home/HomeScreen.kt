@@ -187,7 +187,7 @@ fun HomeContent(
 
                 Spacer(Modifier.height(10.dp))
                 ButtonComponent2(
-                    enable = userData.heart != 5,
+                    enable = userData.heart != 5 && userData.point >= 30,
                     image1 = R.drawable.heart,
                     image2 = R.drawable.xp,
                     modifier = Modifier.padding(bottom = 30.dp),

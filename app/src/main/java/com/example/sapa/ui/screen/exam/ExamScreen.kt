@@ -68,6 +68,7 @@ import kotlinx.coroutines.launch
 fun ExamScreen(
     modifier: Modifier = Modifier,
     id: Int,
+    name: String,
     navigateBack: () -> Unit,
     navigateFinish: () -> Unit,
     viewModel: MainViewModel = viewModel(
@@ -86,7 +87,13 @@ fun ExamScreen(
     var progress by remember {
         mutableFloatStateOf(0f)
     }
-    val letters = remember { ('A'..'N').toList() }
+    val letters = remember(name) {
+        when {
+            '3' in name -> ('1'..'9').toList()
+            '2' in name -> ('O'..'Z').toList()
+            else -> ('A'..'N').toList()
+        }
+    }
     val randomLetters = remember { letters.shuffled().take(5) }
 
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
@@ -110,7 +117,7 @@ fun ExamScreen(
     }
     val controller = remember {
         LifecycleCameraController(context).apply {
-            cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
             setImageAnalysisAnalyzer(
                 ContextCompat.getMainExecutor(context),
@@ -201,9 +208,9 @@ fun ExamScreen(
                             progress += 0.2F
                             if (progress >= 1F) {
                                 viewModel.increasePoint()
-                                if (userData.completed <= id){
-                                    viewModel.updateUserComplete(id+1)
-                                    viewModel.updateUserLevel(id/4)
+                                if (userData.completed <= id) {
+                                    viewModel.updateUserComplete(id + 1)
+                                    viewModel.updateUserLevel(id / 4)
                                 }
                                 navigateFinish()
                             } else {
@@ -230,7 +237,7 @@ fun ExamScreen(
 fun ExamScreenPreview() {
     SAPATheme {
 
-        ExamScreen(navigateBack = {}, navigateFinish = {}, id =1)
+        ExamScreen(navigateBack = {}, navigateFinish = {}, id = 1, name = "question 1")
     }
 }
 

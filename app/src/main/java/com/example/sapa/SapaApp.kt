@@ -91,6 +91,7 @@ fun SapaApp(
                 } else {
                     ExamScreen(
                         id = id,
+                        name = name,
                         navigateBack = {
                             navController.navigateUp()
                         },

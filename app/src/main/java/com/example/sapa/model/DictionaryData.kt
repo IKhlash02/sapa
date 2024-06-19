@@ -7,8 +7,8 @@ object DictionaryData {
     val letters = ('a'..'z')
     val numbers = (1..10).toList()
 
-    val combined = letters + numbers.map { it.toString() }
 
     // Generate the list of complete URLs
-    val dictionary = combined.map { letter -> "$baseUrl$letter.png" }
+    val dictionaryLetters = letters.map { letter -> "$baseUrl$letter.png" }
+    val dictionaryNumbers = numbers.map { number -> "$baseUrl$number.png" }
 }

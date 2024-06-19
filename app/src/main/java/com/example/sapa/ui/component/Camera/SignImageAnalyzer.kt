@@ -17,7 +17,7 @@ class SignImageAnalyzer(
             val rotationDegrees = image.imageInfo.rotationDegrees
             val bitmap = image
                 .toBitmap()
-                .centerCrop(28, 28)
+//                .centerCrop(28, 28)
 
             val result  = classifier.classify(bitmap, rotationDegrees)
             onResults(result)

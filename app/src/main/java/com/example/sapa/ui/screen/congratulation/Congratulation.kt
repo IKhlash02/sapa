@@ -71,9 +71,9 @@ fun CongratulationScreen(
         Text(
             text = "Yeay, kamu berhasil!",
             style = TextStyle(
-//                fontSize = 25.sp,
-//                fontFamily = FontFamily(Font(R.font.nunito)),
-                fontWeight = FontWeight(700),
+                fontSize = 25.sp,
+                fontFamily = nunitoFontFamily,
+                fontWeight = FontWeight.Bold,
                 color = Color(0xFFFFB703),
                 textAlign = TextAlign.Center,
             )
@@ -97,7 +97,7 @@ fun CongratulationScreen(
         Spacer(modifier = Modifier.height(100.dp))
         OptionButton(
             modifier = Modifier.padding(16.dp),
-            optionText = "KEMBALI KE HALAMAN UTAMA",
+            optionText = "SELESAI",
             onClick = { navigateBack() },
             colorButton = Color(0xFF219EBC),
             colorText = Color.White

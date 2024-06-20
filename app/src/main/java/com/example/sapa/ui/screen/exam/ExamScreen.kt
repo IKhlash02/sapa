@@ -87,6 +87,15 @@ fun ExamScreen(
     var progress by remember {
         mutableFloatStateOf(0f)
     }
+
+    val levelUser = remember(name) {
+        when {
+            '3' in name -> 3
+            '2' in name -> 2
+            else -> 1
+        }
+    }
+
     val letters = remember(name) {
         when {
             '3' in name -> ('1'..'9').toList()
@@ -210,7 +219,7 @@ fun ExamScreen(
                                 viewModel.increasePoint(30)
                                 if (userData.completed <= id) {
                                     viewModel.updateUserComplete(id + 1)
-                                    viewModel.updateUserLevel(id / 4)
+                                    viewModel.updateUserLevel(levelUser)
                                 }
                                 navigateFinish()
                             } else {

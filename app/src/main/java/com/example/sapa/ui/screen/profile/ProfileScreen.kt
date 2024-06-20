@@ -158,16 +158,10 @@ fun ProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-//                    CardStat(
-//                        title = "72 jam",
-//                        description = "Waktu dihabiskan",
-//                        painter = painterResource(
-//                            id = R.drawable.time
-//                        )
-//                    )
+
                     Spacer(modifier = Modifier.width(10.dp))
                     CardStat(
-                        title = "2",
+                        title = "${userData.level}",
                         description = "Level dicapai",
                         painter = painterResource(
                             id = R.drawable.level

@@ -7,6 +7,7 @@ import androidx.annotation.RawRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
@@ -25,19 +26,18 @@ fun SoundPlayer(soundResId: Int, context: Context = LocalContext.current) {
             .build()
     }
 
-    val soundId = remember {
-        soundPool.load(context, soundResId, 1)
+    val soundId = remember { mutableStateOf(0) }
+
+    LaunchedEffect(soundPool) {
+        soundPool.setOnLoadCompleteListener { _, sampleId, _ ->
+            soundId.value = sampleId
+            soundPool.play(soundId.value, 1.0f, 1.0f, 0, 0, 1.0f)
+        }
+        soundId.value = soundPool.load(context, soundResId, 1)
     }
 
-    // Memainkan suara saat Composable pertama kali muncul
-    LaunchedEffect(soundPool, soundId) {
-        soundPool.play(soundId, 1.0f, 1.0f, 0, 0, 1.0f)
-    }
-
-    // Membersihkan dan menghentikan suara saat Composable dibuang
     DisposableEffect(soundPool) {
         onDispose {
-            soundPool.stop(soundId)
             soundPool.release()
         }
     }

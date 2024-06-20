@@ -16,15 +16,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -51,11 +53,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.sapa.data.remote.response.QuestionsItem
 import com.example.sapa.di.Injection
-import com.example.sapa.ui.MainViewModel
-import com.example.sapa.ui.ViewModelFactory
+import com.example.sapa.factory.MainViewModel
+import com.example.sapa.factory.StageViewModelFactory
+import com.example.sapa.factory.ViewModelFactory
 import com.example.sapa.ui.component.LoadingComponent
-import com.example.sapa.ui.component.OptionButton
-import com.example.sapa.ui.screen.StageViewModelFactory
+import com.example.sapa.ui.component.buttons.OptionButton
 import com.example.sapa.ui.screen.common.UiState
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
@@ -105,12 +107,11 @@ fun QuestionScreen(
 fun QuestionContent(
     modifier: Modifier = Modifier,
     id: Int,
-    questions : List<QuestionsItem>,
+    questions: List<QuestionsItem>,
     navigateBack: () -> Unit,
     navigateFinish: () -> Unit
 ) {
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
-
     val context = LocalContext.current
     val viewModel: MainViewModel = viewModel(
         factory = ViewModelFactory(
@@ -120,145 +121,170 @@ fun QuestionContent(
     val userData = viewModel.userData.collectAsState().value
 
     var progress by remember { mutableFloatStateOf(0F) }
+
+    var point by remember { mutableIntStateOf(30) }
+
     val currentQuestion = questions[currentQuestionIndex]
-    val sheetState = rememberModalBottomSheetState(
-    )
-    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false
+
+        )
+    )
+
+
+    val scope = rememberCoroutineScope()
     var isAnswerCorrect by remember { mutableStateOf(true) }
 
     Log.d("soal", "index: $currentQuestionIndex")
     Log.d("soal", "progress: $progress")
 
-    Column(
-        modifier = modifier
-            .background(color = PacificBlue2)
-            .padding(16.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    BottomSheetScaffold(
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(
-                onClick = navigateBack,
-                content = {
-                    Icon(
-                        modifier = Modifier
-                            .padding(0.dp)
-                            .size(30.dp),
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                },
-            )
-            ProgressBar(progress = progress, modifier.weight(1F))
-            Spacer(modifier = Modifier.width(10.dp))
-            Icon(imageVector = Icons.Filled.Favorite, contentDescription = null, tint = Color.Red)
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                text = "${userData.heart}",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontFamily = nunitoFontFamily,
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            )
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        QuestionCard(modifier = Modifier.weight(1f), imageUrl = currentQuestion.link ?: "")
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        OptionButton(currentQuestion.option1 ?: "", onClick = {
-            showBottomSheet = true
-            isAnswerCorrect = currentQuestion.answer == currentQuestion.option1
-        }
-        )
-        OptionButton(currentQuestion.option2 ?: "", onClick = {
-            showBottomSheet = true
-            isAnswerCorrect = currentQuestion.answer == currentQuestion.option2
-        })
-        OptionButton(currentQuestion.option3 ?: "", onClick = {
-            showBottomSheet = true
-            isAnswerCorrect = currentQuestion.answer == currentQuestion.option3
-        })
-        OptionButton(currentQuestion.option4 ?: "", onClick = {
-            showBottomSheet = true
-            isAnswerCorrect = currentQuestion.answer == currentQuestion.option4
-        })
-
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        if (showBottomSheet) {
-
-            ModalBottomSheet(
-                shape = RectangleShape,
-                containerColor = if (isAnswerCorrect) Color(0xFFD7FFB8) else Color(0xFFFFDFE0),
-                onDismissRequest = {
-                    showBottomSheet = false
-                },
-                sheetState = sheetState
+        sheetContainerColor = if (isAnswerCorrect) Color(0xFFD7FFB8) else Color(0xFFFFDFE0),
+        sheetShape = RectangleShape,
+        sheetSwipeEnabled = false,
+        sheetDragHandle = {},
+        scaffoldState = scaffoldState,
+        sheetContent = {
+            // Bottom Sheet Content
+            Column(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 35.dp)
             ) {
-                // Sheet content
-
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = if (isAnswerCorrect) "Benar" else "Salah",
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontFamily = nunitoFontFamily,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = if (isAnswerCorrect) Color(0xFF58A700) else Color(0xFFEA2B26),
-                            textAlign = TextAlign.Center,
-                        )
+                Text(
+                    text = if (isAnswerCorrect) "Benar" else "Salah",
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontFamily = nunitoFontFamily,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (isAnswerCorrect) Color(0xFF58A700) else Color(0xFFEA2B26),
+                        textAlign = TextAlign.Center,
                     )
+                )
 
-                    Spacer(Modifier.height(10.dp))
-                    OptionButton(
-                        modifier = Modifier.padding(bottom = 30.dp),
-                        optionText = "Lanjutkan", onClick = {
-                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    showBottomSheet = false
+                Spacer(Modifier.height(10.dp))
+                OptionButton(
+                    modifier = Modifier.padding(bottom = 30.dp),
+                    optionText = "Lanjutkan", onClick = {
+                        scope.launch {
+                            scaffoldState.bottomSheetState.hide()
+                        }.invokeOnCompletion { showBottomSheet = false }
+
+                        if (!isAnswerCorrect) {
+                            viewModel.decreaseHeart()
+                            point -= 5
+                        }
+
+                        if (userData.heart == 0 && !isAnswerCorrect) {
+                            navigateBack()
+                        } else {
+                            progress += 1F / questions.size
+                            if (progress >= 1F) {
+                                viewModel.increasePoint(point)
+                                if (userData.completed <= id) {
+                                    viewModel.updateUserComplete(id + 1)
                                 }
-                            }
-
-                            if(!isAnswerCorrect){
-                                viewModel.decreaseHeart()
-                            }
-
-                            if (userData.heart == 0 && !isAnswerCorrect) {
-                                navigateBack()
+                                navigateFinish()
                             } else {
-                                progress += 1F/questions.size
-                                if (progress >= 1F) {
-                                    viewModel.increasePoint()
-                                    if (userData.completed <= id) {
-                                        viewModel.updateUserComplete(id + 1)
-                                    }
-                                    navigateFinish()
-                                } else {
-                                    currentQuestionIndex++
-                                }
+                                currentQuestionIndex++
                             }
-                        },
-                        colorButton = if (isAnswerCorrect) Color(0xFF58CC02) else Color(0xFFFF4B4C),
-                        colorText = Color(0xFFFFFFFF)
-                    )
+                        }
+                    },
+                    colorButton = if (isAnswerCorrect) Color(0xFF58CC02) else Color(0xFFFF4B4C),
+                    colorText = Color(0xFFFFFFFF)
+                )
+            }
+        },
+        sheetPeekHeight = 0.dp
+    ) {
+        Column(
+            modifier = modifier
+                .background(color = PacificBlue2)
+                .padding(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = navigateBack,
+                    content = {
+                        Icon(
+                            modifier = Modifier
+                                .padding(0.dp)
+                                .size(30.dp),
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    },
+                )
+                ProgressBar(progress = progress, modifier.weight(1F))
+                Spacer(modifier = Modifier.width(10.dp))
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = null,
+                    tint = Color.Red
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = "${userData.heart}",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontFamily = nunitoFontFamily,
+                        color = Color.White,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            QuestionCard(modifier = Modifier.weight(1f), imageUrl = currentQuestion.link ?: "")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OptionButton(currentQuestion.option1 ?: "", onClick = {
+                if (!showBottomSheet) {
+                    isAnswerCorrect = currentQuestion.answer == currentQuestion.option1
+                    scope.launch {
+                        scaffoldState.bottomSheetState.expand()
+                    }.invokeOnCompletion { showBottomSheet = true }
                 }
 
-            }
+            })
+            OptionButton(
+                currentQuestion.option2 ?: "", onClick = {
+                    if (!showBottomSheet) {
+                        isAnswerCorrect = currentQuestion.answer == currentQuestion.option2
+                        scope.launch {
+                            scaffoldState.bottomSheetState.expand()
+                        }.invokeOnCompletion { showBottomSheet = true }
+                    }
+                })
+            OptionButton(currentQuestion.option3 ?: "", onClick = {
+                if (!showBottomSheet) {
+                    isAnswerCorrect = currentQuestion.answer == currentQuestion.option3
+                    scope.launch {
+                        scaffoldState.bottomSheetState.expand()
+                    }.invokeOnCompletion { showBottomSheet = true }
+                }
+            })
+            OptionButton(currentQuestion.option4 ?: "", onClick = {
+                if (!showBottomSheet) {
+                    isAnswerCorrect = currentQuestion.answer == currentQuestion.option4
+                    scope.launch {
+                        scaffoldState.bottomSheetState.expand()
+                    }.invokeOnCompletion { showBottomSheet = true }
+                }
+            })
+
+            Spacer(modifier = Modifier.height(30.dp))
         }
     }
 }
+
 
 @Composable
 fun ProgressBar(progress: Float, modifier: Modifier = Modifier) {

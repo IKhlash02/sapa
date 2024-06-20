@@ -50,12 +50,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sapa.di.Injection
 import com.example.sapa.model.Classification
-import com.example.sapa.ui.MainViewModel
-import com.example.sapa.ui.ViewModelFactory
-import com.example.sapa.ui.component.Camera.CameraPreview1
-import com.example.sapa.ui.component.Camera.SignImageAnalyzer
-import com.example.sapa.ui.component.Camera.TfLiteSignClassifier
-import com.example.sapa.ui.component.OptionButton
+import com.example.sapa.factory.MainViewModel
+import com.example.sapa.factory.ViewModelFactory
+import com.example.sapa.ui.component.camera.CameraPreview1
+import com.example.sapa.ui.component.camera.SignImageAnalyzer
+import com.example.sapa.ui.component.camera.TfLiteSignClassifier
+import com.example.sapa.ui.component.buttons.OptionButton
 import com.example.sapa.ui.screen.question.ProgressBar
 import com.example.sapa.ui.theme.PacificBlue2
 import com.example.sapa.ui.theme.SAPATheme
@@ -207,7 +207,7 @@ fun ExamScreen(
                             }
                             progress += 0.2F
                             if (progress >= 1F) {
-                                viewModel.increasePoint()
+                                viewModel.increasePoint(30)
                                 if (userData.completed <= id) {
                                     viewModel.updateUserComplete(id + 1)
                                     viewModel.updateUserLevel(id / 4)

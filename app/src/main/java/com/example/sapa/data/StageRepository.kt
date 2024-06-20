@@ -42,7 +42,7 @@ class StageRepository(
         try {
             Log.d("stageApi", "start api detail")
             val response = apiService.getDetailRestaurant(id)
-            val questions = response.data.questions
+            val questions = response.data.questions.shuffled()
             emit(UiState.Success(questions))
         } catch (e: Exception) {
             Log.d("stageApi", "error: $e")

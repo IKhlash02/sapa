@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sapa.R
 import com.example.sapa.ui.component.AnimatedPreloader
-import com.example.sapa.ui.component.IconButton
-import com.example.sapa.ui.component.OptionButton
+import com.example.sapa.ui.component.buttons.IconButton
+import com.example.sapa.ui.component.buttons.OptionButton
 import com.example.sapa.ui.theme.SAPATheme
 import com.example.sapa.ui.theme.nunitoFontFamily
 import kotlinx.coroutines.launch

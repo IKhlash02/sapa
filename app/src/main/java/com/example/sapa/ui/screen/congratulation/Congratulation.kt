@@ -30,10 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sapa.R
 import com.example.sapa.di.Injection
-import com.example.sapa.ui.MainViewModel
-import com.example.sapa.ui.ViewModelFactory
+import com.example.sapa.factory.MainViewModel
+import com.example.sapa.factory.ViewModelFactory
 import com.example.sapa.ui.component.AnimatedPreloader
-import com.example.sapa.ui.component.OptionButton
+import com.example.sapa.ui.component.buttons.OptionButton
 import com.example.sapa.ui.component.SoundPlayer
 import com.example.sapa.ui.theme.SAPATheme
 import com.example.sapa.ui.theme.nunitoFontFamily

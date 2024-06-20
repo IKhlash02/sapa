@@ -42,13 +42,13 @@ import com.example.sapa.R
 import com.example.sapa.data.pref.UserModel
 import com.example.sapa.di.Injection
 import com.example.sapa.model.UnitModel
-import com.example.sapa.ui.MainViewModel
-import com.example.sapa.ui.ViewModelFactory
-import com.example.sapa.ui.component.ButtonComponent2
+import com.example.sapa.factory.MainViewModel
+import com.example.sapa.factory.ViewModelFactory
+import com.example.sapa.ui.component.buttons.ButtonComponent2
 import com.example.sapa.ui.component.LoadingComponent
 import com.example.sapa.ui.component.StageItem
 import com.example.sapa.ui.component.UnitItem
-import com.example.sapa.ui.screen.StageViewModelFactory
+import com.example.sapa.factory.StageViewModelFactory
 import com.example.sapa.ui.screen.common.UiState
 import com.example.sapa.ui.theme.PacificBlue
 import com.example.sapa.ui.theme.SAPATheme

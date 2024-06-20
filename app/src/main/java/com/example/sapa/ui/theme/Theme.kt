@@ -33,7 +33,8 @@ private val LightColorScheme = lightColorScheme(
 
     onSurface = Color.White,
     secondaryContainer = LightBlue,
-    onSurfaceVariant = Color.White
+    onSurfaceVariant = Color.White,
+
 
 
 

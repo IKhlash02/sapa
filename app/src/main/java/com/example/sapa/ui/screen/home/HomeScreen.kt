@@ -112,6 +112,7 @@ fun HomeContent(
 
     val widthSize = listOf(50, 100 , 150 , 200 )
     Scaffold(
+        modifier = modifier.background(color = Color.White),
         topBar = {
             TopBar(
                 userModel = userData,
@@ -123,7 +124,7 @@ fun HomeContent(
     ) { innerPadding ->
 
         LazyColumn(
-            modifier.padding(innerPadding)
+           Modifier.padding(innerPadding)
         ) {
 
 

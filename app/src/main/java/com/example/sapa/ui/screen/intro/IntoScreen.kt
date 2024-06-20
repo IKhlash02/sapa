@@ -1,5 +1,6 @@
 package com.example.sapa.ui.screen.intro
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -48,7 +49,10 @@ fun IntroScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier.fillMaxSize().padding(horizontal = 27.dp, vertical = 30.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = Color.White)
+            .padding(horizontal = 27.dp, vertical = 30.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 
@@ -87,21 +91,10 @@ fun IntroScreen(
         OptionButton(
             modifier = Modifier.padding(0.dp),
             optionText = "MARI MULAI",
-            onClick =  navigateHome ,
+            onClick = navigateHome,
             colorButton = Color(0xFF219EBC),
             colorText = Color.White
         )
-//        Spacer(modifier = Modifier.height(10.dp))
-//        OptionButton(
-//            modifier = Modifier.padding(0.dp),
-//            optionText = "SAYA SUDAH PUNYA AKUN",
-//            onClick = {
-//                showBottomSheet = true
-//            },
-//            colorButton = Color.White,
-//            colorText = Color(0xFF219EBC)
-//        )
-
         if (showBottomSheet) {
             ModalBottomSheet(
                 containerColor = Color(0xFF023047),

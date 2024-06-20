@@ -1,6 +1,7 @@
 package com.example.sapa.ui.component.camera
 
 
+import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.example.sapa.model.Classification
@@ -20,9 +21,8 @@ class SignImageAnalyzer(
 //                .centerCrop(28, 28)
 
             val result  = classifier.classify(bitmap, rotationDegrees)
+            Log.d("camerax123", "$result")
             onResults(result)
-
-
         }
 
         frameSkipCounter++

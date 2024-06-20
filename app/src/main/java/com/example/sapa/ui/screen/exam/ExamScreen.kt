@@ -121,12 +121,15 @@ fun ExamScreen(
             onResults = {
                 Log.d("main1", it.toString())
                 classification = it
+                if (currentQuestion.toString() in it[0].name) {
+                    showBottomSheet = true
+                }
             }
         )
     }
     val controller = remember {
         LifecycleCameraController(context).apply {
-            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
             setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
             setImageAnalysisAnalyzer(
                 ContextCompat.getMainExecutor(context),
@@ -312,6 +315,7 @@ fun QuestionCard(
                         )
                     )
                     classifications.forEach {
+
                         Text(
                             text = it.name,
                             style = TextStyle(
@@ -322,9 +326,8 @@ fun QuestionCard(
                                 textAlign = TextAlign.Center,
                             )
                         )
-                        if (currentQuestion.toString() == it.name) {
-                            showBottomSheet(true)
-                        }
+
+
                     }
 
                 }
